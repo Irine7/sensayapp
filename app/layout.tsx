@@ -6,7 +6,6 @@ import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import Header from '@/components/header';
 import ChatProvider from '@/components/chat-provider';
-import PlayerProvider from '@/components/player-provider';
 import ReplicaProvider from '@/components/replica-provider';
 import ResizablePanel from '@/components/resizable-panel';
 
@@ -20,7 +19,7 @@ export const metadata: Metadata = {
 	},
 };
 
-import { HeaderProvider } from '@/components/header-context'
+import { HeaderProvider } from '@/components/header-context';
 
 export default function RootLayout({
 	children,
@@ -37,25 +36,16 @@ export default function RootLayout({
 					disableTransitionOnChange
 				>
 					<HeaderProvider>
-						<PlayerProvider>
-							<ReplicaProvider>
-								<ChatProvider>
-								{/* Special handling for lobby page */}
-								{typeof window !== 'undefined' && window.location.pathname.includes('/lobby') ? (
-									<main className="flex-1">{children}</main>
-								) : (
-									<div className="flex flex-col h-full">
-										<Header />
-										<main className="flex-1 flex overflow-hidden">
-											<ResizablePanel>
-												{children}
-											</ResizablePanel>
-										</main>
-									</div>
-								)}
-								</ChatProvider>
-							</ReplicaProvider>
-						</PlayerProvider>
+						<ReplicaProvider>
+							<ChatProvider>
+								<div className="flex flex-col h-full">
+									<Header />
+									<main className="flex-1 flex overflow-hidden">
+										<ResizablePanel>{children}</ResizablePanel>
+									</main>
+								</div>
+							</ChatProvider>
+						</ReplicaProvider>
 					</HeaderProvider>
 				</ThemeProvider>
 				{/* <Script 

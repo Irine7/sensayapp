@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 import { ModeToggle } from './mode-toggle';
 import { Button } from '@/components/ui/button';
 import {
@@ -17,7 +18,6 @@ import {
 	RefreshCcw,
 	Bot,
 } from 'lucide-react';
-import { usePlayer } from './player-provider';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -26,15 +26,18 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Progress } from '@/components/ui/progress';
 import { useHeader } from '@/components/header-context';
 import { useReplica } from './replica-context';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function HeaderInner() {
 	const pathname = usePathname();
-	const { isAIChatVisible, toggleAIChat, playerName, playerLevel } =
-		usePlayer();
+	const [isAIChatVisible, setIsAIChatVisible] = useState(true);
+	const [playerName] = useState('User');
+
+	const toggleAIChat = () => {
+		setIsAIChatVisible((prev) => !prev);
+	};
 
 	// Navigation items divided by categories
 
@@ -49,18 +52,11 @@ function HeaderInner() {
 		{ name: 'Chat History', path: '/chat-history' },
 	];
 
-	const gameItems = [
-		{ name: 'Lobby', path: '/lobby' },
-		{ name: 'Betting', path: '/betting' },
-		{ name: 'Investment', path: '/investment' },
-	];
+	const gameItems: { name: string; path: string }[] = [];
 
 	const experimentalItems = [
 		{ name: 'Experimental API', path: '/experimental' },
 	];
-
-	const progressPercentage =
-		(playerLevel.currentXP / playerLevel.requiredXP) * 100;
 
 	const { headerState } = useHeader();
 	return (
