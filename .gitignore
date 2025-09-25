@@ -31,3 +31,6 @@ next-env.d.ts
 
 # macos
 .DS_Store
+
+# txt files
+.txt 

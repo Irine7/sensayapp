@@ -70,7 +70,10 @@ export default function ResizablePanel({
 			{/* Resizable chat panel */}
 			<div
 				ref={resizableRef}
-				className={cn('h-full relative border-r border-dark-500', className)}
+				className={cn(
+					'h-full relative border-r border-border/50 bg-surface-50 dark:bg-surface-50',
+					className
+				)}
 				style={{
 					width: `${width}px`,
 					minWidth: `${minWidth}px`,
@@ -80,7 +83,7 @@ export default function ResizablePanel({
 				<ChatInterface />
 				{/* Resize handle */}
 				<div
-					className="absolute top-0 right-0 w-1 h-full bg-dark-500 hover:bg-mafia-500 cursor-ew-resize"
+					className="absolute top-0 right-0 w-1 h-full bg-border/50 hover:bg-primary cursor-ew-resize transition-colors duration-200"
 					onMouseDown={startResizing}
 				/>
 			</div>
