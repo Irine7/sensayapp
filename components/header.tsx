@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { ModeToggle } from './mode-toggle';
+import { LanguageSwitcher } from './language-switcher';
 import { Button } from '@/components/ui/button';
+import { useTranslations } from 'next-intl';
 import {
 	MessageSquare,
 	User,
@@ -35,24 +37,25 @@ function HeaderInner() {
 	const pathname = usePathname();
 	const [playerName] = useState('User');
 	const { isAIChatVisible, toggleAIChat } = useSidebar();
+	const t = useTranslations();
 
 	// Navigation items divided by categories
 
 	const adminItems = [
-		{ name: 'API Settings', path: '/admin/settings' },
-		{ name: 'API Keys', path: '/api-keys' },
+		{ name: t('menu.apiSettings'), path: '/admin/settings' },
+		{ name: t('menu.apiKeys'), path: '/api-keys' },
 	];
 
 	const sensayTrainingItems = [
-		{ name: 'AI Training', path: '/training' },
-		{ name: 'Replicas', path: '/replicas' },
-		{ name: 'Chat History', path: '/chat-history' },
+		{ name: t('menu.aiTraining'), path: '/training' },
+		{ name: t('menu.replicas'), path: '/replicas' },
+		{ name: t('menu.chatHistory'), path: '/chat-history' },
 	];
 
 	const gameItems: { name: string; path: string }[] = [];
 
 	const experimentalItems = [
-		{ name: 'Experimental API', path: '/experimental' },
+		{ name: t('menu.experimentalApi'), path: '/experimental' },
 	];
 
 	const { headerState } = useHeader();
@@ -61,7 +64,7 @@ function HeaderInner() {
 			<div className="container mx-auto px-4 py-3 flex items-center justify-between">
 				<div className="flex items-center gap-4">
 					<h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent-500 bg-clip-text text-transparent">
-						Sensay dApp
+						{t('app.title')}
 					</h1>
 
 					<nav className="hidden md:flex items-center gap-6">
@@ -71,7 +74,7 @@ function HeaderInner() {
 								pathname === '/' ? 'text-primary' : 'text-foreground'
 							}`}
 						>
-							Home
+							{t('navigation.home')}
 						</Link>
 
 						{/* Dropdown menu for administration */}
@@ -81,7 +84,9 @@ function HeaderInner() {
 									variant="ghost"
 									className="flex items-center gap-1 text-foreground hover:bg-surface-200 hover:text-foreground px-3 py-2 h-auto rounded-lg transition-all duration-200 hover:shadow-soft"
 								>
-									<span className="text-sm font-medium">Administration</span>
+									<span className="text-sm font-medium">
+										{t('navigation.administration')}
+									</span>
 									<ChevronDown size={14} />
 								</Button>
 							</DropdownMenuTrigger>
@@ -110,7 +115,9 @@ function HeaderInner() {
 									variant="ghost"
 									className="flex items-center gap-1 text-foreground hover:bg-surface-200 hover:text-foreground px-3 py-2 h-auto rounded-lg transition-all duration-200 hover:shadow-soft"
 								>
-									<span className="text-sm font-medium">AI Training</span>
+									<span className="text-sm font-medium">
+										{t('navigation.aiTraining')}
+									</span>
 									<ChevronDown size={14} />
 								</Button>
 							</DropdownMenuTrigger>
@@ -139,7 +146,9 @@ function HeaderInner() {
 									variant="ghost"
 									className="flex items-center gap-1 text-foreground hover:bg-surface-200 hover:text-foreground px-3 py-2 h-auto rounded-lg transition-all duration-200 hover:shadow-soft"
 								>
-									<span className="text-sm font-medium">Experimental</span>
+									<span className="text-sm font-medium">
+										{t('navigation.experimental')}
+									</span>
 									<ChevronDown size={14} />
 								</Button>
 							</DropdownMenuTrigger>
@@ -169,7 +178,9 @@ function HeaderInner() {
 						size="icon"
 						onClick={toggleAIChat}
 						className="text-foreground hover:bg-surface-200 hover:text-foreground rounded-lg transition-all duration-200 hover:shadow-soft"
-						title={isAIChatVisible ? 'Hide AI Assistant' : 'Show AI Assistant'}
+						title={
+							isAIChatVisible ? t('ai.hideAssistant') : t('ai.showAssistant')
+						}
 					>
 						<MessageSquare
 							className={isAIChatVisible ? 'text-primary' : 'text-foreground'}
@@ -177,6 +188,8 @@ function HeaderInner() {
 					</Button>
 
 					<ModeToggle />
+
+					<LanguageSwitcher />
 
 					{/* Replica Selection Dropdown */}
 					<ReplicaDropdown />
@@ -259,6 +272,7 @@ function ReplicaDropdown() {
 		refreshReplicas,
 		selectedReplica,
 	} = useReplica();
+	const t = useTranslations();
 
 	return (
 		<DropdownMenu>
@@ -270,16 +284,16 @@ function ReplicaDropdown() {
 					<Bot size={14} className="mr-1" />
 					<span className="text-sm font-medium">
 						{loading
-							? 'Loading replicas...'
+							? t('replica.loadingReplicas')
 							: selectedReplica
 							? selectedReplica.name
-							: 'Select Replica'}
+							: t('replica.selectReplica')}
 					</span>
 					<ChevronDown size={14} />
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
-				<DropdownMenuLabel>Active Replica</DropdownMenuLabel>
+				<DropdownMenuLabel>{t('replica.activeReplica')}</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 
 				{loading ? (
@@ -304,13 +318,15 @@ function ReplicaDropdown() {
 						</DropdownMenuItem>
 					))
 				) : (
-					<DropdownMenuItem disabled>No replicas available</DropdownMenuItem>
+					<DropdownMenuItem disabled>
+						{t('replica.noReplicasAvailable')}
+					</DropdownMenuItem>
 				)}
 
 				<DropdownMenuSeparator />
 				<DropdownMenuItem onClick={refreshReplicas}>
 					<RefreshCcw className="h-4 w-4 mr-2" />
-					Refresh Replicas
+					{t('replica.refreshReplicas')}
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
