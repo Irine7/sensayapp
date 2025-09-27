@@ -5,7 +5,7 @@ export default function Home() {
 				<div className="text-center space-y-8">
 					<div className="space-y-4">
 						<h1 className="text-5xl font-bold bg-gradient-to-r from-primary via-accent-500 to-primary bg-clip-text text-transparent">
-							Sensay dApp
+							Evoo
 						</h1>
 						<p className="text-xl text-muted-foreground max-w-2xl mx-auto">
 							Окунитесь в будущее ИИ-разговоров с нашим элегантным и современным

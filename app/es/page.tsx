@@ -5,10 +5,11 @@ export default function Home() {
 				<div className="text-center space-y-8">
 					<div className="space-y-4">
 						<h1 className="text-5xl font-bold bg-gradient-to-r from-primary via-accent-500 to-primary bg-clip-text text-transparent">
-							Sensay dApp
+							Evoo
 						</h1>
 						<p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-							Experimenta el futuro de las conversaciones impulsadas por IA con nuestra interfaz elegante y moderna
+							Experimenta el futuro de las conversaciones impulsadas por IA con
+							nuestra interfaz elegante y moderna
 						</p>
 					</div>
 
@@ -31,7 +32,8 @@ export default function Home() {
 							</div>
 							<h3 className="text-lg font-semibold">Conversaciones con IA</h3>
 							<p className="text-muted-foreground">
-								Participa en conversaciones inteligentes con réplicas avanzadas de IA
+								Participa en conversaciones inteligentes con réplicas avanzadas
+								de IA
 							</p>
 						</div>
 
@@ -53,7 +55,8 @@ export default function Home() {
 							</div>
 							<h3 className="text-lg font-semibold">Chat en Tiempo Real</h3>
 							<p className="text-muted-foreground">
-								Experimenta comunicación fluida en tiempo real con respuestas instantáneas
+								Experimenta comunicación fluida en tiempo real con respuestas
+								instantáneas
 							</p>
 						</div>
 
@@ -75,7 +78,8 @@ export default function Home() {
 							</div>
 							<h3 className="text-lg font-semibold">Seguro y Privado</h3>
 							<p className="text-muted-foreground">
-								Tus conversaciones están protegidas con seguridad de nivel empresarial
+								Tus conversaciones están protegidas con seguridad de nivel
+								empresarial
 							</p>
 						</div>
 					</div>

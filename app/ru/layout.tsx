@@ -13,7 +13,7 @@ import ResizablePanel from '@/components/resizable-panel';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-	title: 'Sensay dApp',
+	title: 'Evoo',
 	description: 'AI-powered application with Sensay API',
 	icons: {
 		icon: '/favicon.ico',

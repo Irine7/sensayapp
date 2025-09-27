@@ -129,20 +129,18 @@ export default function SimpleHeader({ locale }: SimpleHeaderProps) {
 		<header className="border-b bg-background/95 backdrop-blur-md text-foreground sticky top-0 z-50">
 			<div className="container mx-auto px-4 py-3 flex items-center justify-between">
 				<div className="flex items-center gap-4">
-					<h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent-500 bg-clip-text text-transparent">
-						Sensay dApp
-					</h1>
-
-					<nav className="hidden md:flex items-center gap-6">
-						<Link
-							href={`/${locale}`}
+				<Link
+							href="/"
 							className={`text-sm font-medium transition-colors hover:text-primary ${
-								pathname === `/${locale}` ? 'text-primary' : 'text-foreground'
+								pathname === '/' ? 'text-primary' : 'text-foreground'
 							}`}
 						>
-							{getLocalizedText('home')}
-						</Link>
+					<h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent-500 bg-clip-text text-transparent">
+						Evoo
+					</h1>
+					</Link>
 
+					<nav className="hidden md:flex items-center gap-6">
 						{/* Dropdown menu for administration */}
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
