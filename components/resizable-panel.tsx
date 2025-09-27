@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import ChatInterface from './chat-interface';
+import { useSidebar } from './sidebar-context';
 
 interface ResizablePanelProps {
 	children: React.ReactNode;
@@ -22,7 +23,7 @@ export default function ResizablePanel({
 	const [width, setWidth] = useState(defaultWidth);
 	const [isResizing, setIsResizing] = useState(false);
 	const resizableRef = useRef<HTMLDivElement>(null);
-	const [isAIChatVisible] = useState(true);
+	const { isAIChatVisible } = useSidebar();
 
 	useEffect(() => {
 		const handleMouseMove = (e: MouseEvent) => {

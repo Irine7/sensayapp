@@ -28,16 +28,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useHeader } from '@/components/header-context';
 import { useReplica } from './replica-context';
+import { useSidebar } from './sidebar-context';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function HeaderInner() {
 	const pathname = usePathname();
-	const [isAIChatVisible, setIsAIChatVisible] = useState(true);
 	const [playerName] = useState('User');
-
-	const toggleAIChat = () => {
-		setIsAIChatVisible((prev) => !prev);
-	};
+	const { isAIChatVisible, toggleAIChat } = useSidebar();
 
 	// Navigation items divided by categories
 

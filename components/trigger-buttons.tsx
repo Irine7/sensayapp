@@ -8,6 +8,7 @@ import { useHeader } from './header-context';
 import { ChatTrigger } from '@/app/lib/utils/parseTrigger';
 import { SensayReplica } from '@/app/lib/api/sensay-replicas-client';
 import { useChat } from './chat-provider';
+import { useReplica } from './replica-context';
 
 // Расширенный тип триггера, включающий возможность вопросов
 type QuestionTrigger = {
@@ -39,6 +40,7 @@ export function TriggerButtons({
 	const { setTheme } = useTheme();
 	const { setHeaderState } = useHeader();
 	const { addMessage } = useChat();
+	const { selectedReplicaUuid } = useReplica();
 
 	// Предопределенные триггеры для навигации
 	const navigationTriggers: TriggerButton[] = [
@@ -82,7 +84,10 @@ export function TriggerButtons({
 	const suggestedQuestionTriggers: TriggerButton[] = [];
 
 	// Если есть выбранная реплика и у нее есть предлагаемые вопросы
-	if (selectedReplica?.suggestedQuestions?.length > 0) {
+	if (
+		selectedReplica?.suggestedQuestions &&
+		selectedReplica.suggestedQuestions.length > 0
+	) {
 		// Создаем триггеры из вопросов
 		selectedReplica.suggestedQuestions.forEach((question, index) => {
 			suggestedQuestionTriggers.push({
@@ -128,7 +133,10 @@ export function TriggerButtons({
 				break;
 			case 'question':
 				// Обработка триггера типа "question" - добавляем вопрос в чат от имени пользователя
-				addMessage({ role: 'user', content: trigger.payload });
+				addMessage(
+					{ role: 'user', content: trigger.payload },
+					selectedReplicaUuid
+				);
 				break;
 		}
 	};

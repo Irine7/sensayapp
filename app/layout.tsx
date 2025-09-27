@@ -20,6 +20,7 @@ export const metadata: Metadata = {
 };
 
 import { HeaderProvider } from '@/components/header-context';
+import { SidebarProvider } from '@/components/sidebar-context';
 
 export default function RootLayout({
 	children,
@@ -36,16 +37,18 @@ export default function RootLayout({
 					disableTransitionOnChange
 				>
 					<HeaderProvider>
-						<ReplicaProvider>
-							<ChatProvider>
-								<div className="flex flex-col h-full">
-									<Header />
-									<main className="flex-1 flex overflow-hidden">
-										<ResizablePanel>{children}</ResizablePanel>
-									</main>
-								</div>
-							</ChatProvider>
-						</ReplicaProvider>
+						<SidebarProvider>
+							<ReplicaProvider>
+								<ChatProvider>
+									<div className="flex flex-col h-full">
+										<Header />
+										<main className="flex-1 flex overflow-hidden">
+											<ResizablePanel>{children}</ResizablePanel>
+										</main>
+									</div>
+								</ChatProvider>
+							</ReplicaProvider>
+						</SidebarProvider>
 					</HeaderProvider>
 				</ThemeProvider>
 				{/* <Script 
