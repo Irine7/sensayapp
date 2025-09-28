@@ -123,6 +123,7 @@ export function usePeopleFromChat() {
  * Вычисляет процент совпадения между запросом пользователя и профилем человека
  */
 function calculateMatchPercentage(userQuery: string, person: Person): number {
+	if (!userQuery) return 0; // Если запрос пустой, возвращаем 0%
 	const query = userQuery.toLowerCase();
 	const queryWords = query.split(/\s+/).filter((word) => word.length > 2);
 
@@ -347,16 +348,34 @@ function calculateMatchPercentage(userQuery: string, person: Person): number {
  * Ранжирует список людей по проценту совпадения
  */
 function rankPeopleByMatch(people: Person[], userQuery: string): Person[] {
-	return people
+	const peopleWithScores = people
 		.map((person) => ({
 			...person,
 			matchPercentage: calculateMatchPercentage(userQuery, person),
 		}))
-		.sort((a, b) => (b.matchPercentage || 0) - (a.matchPercentage || 0))
-		.map((person, index) => ({
+		.sort((a, b) => (b.matchPercentage || 0) - (a.matchPercentage || 0));
+
+	// Обеспечиваем уникальность процентов, добавляя небольшие различия
+	const uniqueScores = new Set<number>();
+	return peopleWithScores.map((person, index) => {
+		let finalScore = person.matchPercentage || 0;
+
+		// Если такой процент уже существует, уменьшаем его на небольшую величину
+		while (uniqueScores.has(finalScore) && finalScore > 0) {
+			finalScore -= 0.1; // Уменьшаем на 0.1%
+		}
+
+		// Округляем до одного знака после запятой
+		finalScore = Math.round(finalScore * 10) / 10;
+
+		uniqueScores.add(finalScore);
+
+		return {
 			...person,
+			matchPercentage: finalScore,
 			isBestMatch: index === 0,
-		}));
+		};
+	});
 }
 
 /**
@@ -475,6 +494,7 @@ function extractPeopleFromMessage(messageContent: string): Person[] {
 		}
 
 		while ((match = pattern.exec(messageContent)) !== null) {
+			if (!match[1]) continue; // Пропускаем если нет захваченной группы
 			let fullName = match[1].trim();
 
 			// Для последнего паттерна (любое содержимое в **) проверяем, что это похоже на имя
@@ -559,7 +579,7 @@ function extractPeopleFromMessage(messageContent: string): Person[] {
 
 				for (const rolePattern of rolePatterns) {
 					const roleMatch = context.match(rolePattern);
-					if (roleMatch) {
+					if (roleMatch && roleMatch[1]) {
 						let role = roleMatch[1].trim();
 						console.log(`🔍 Raw role extracted: "${role}"`);
 
@@ -598,7 +618,7 @@ function extractPeopleFromMessage(messageContent: string): Person[] {
 
 				for (const companyPattern of companyPatterns) {
 					const companyMatch = context.match(companyPattern);
-					if (companyMatch) {
+					if (companyMatch && companyMatch[1]) {
 						person.company = companyMatch[1].trim();
 						break;
 					}
@@ -620,6 +640,7 @@ function extractPeopleFromMessage(messageContent: string): Person[] {
 					const descriptionMatch = context.match(descPattern);
 					if (
 						descriptionMatch &&
+						descriptionMatch[1] &&
 						descriptionMatch[1] !== person.role &&
 						descriptionMatch[1].length > 10 &&
 						!descriptionMatch[1].includes('в ') &&
@@ -638,7 +659,7 @@ function extractPeopleFromMessage(messageContent: string): Person[] {
 
 				for (const expPattern of expertisePatterns) {
 					const expMatch = context.match(expPattern);
-					if (expMatch) {
+					if (expMatch && expMatch[1]) {
 						person.expertise = expMatch[1].split(/[,;]/).map((s) => s.trim());
 						break;
 					}
@@ -656,7 +677,7 @@ function extractPeopleFromMessage(messageContent: string): Person[] {
 
 				for (const locPattern of locationPatterns) {
 					const locMatch = context.match(locPattern);
-					if (locMatch) {
+					if (locMatch && locMatch[1]) {
 						let location = locMatch[1].trim();
 						// Очищаем локацию от лишних слов
 						location = location.replace(/\s*\.\s*$/, '');
@@ -684,6 +705,7 @@ function extractPeopleFromMessage(messageContent: string): Person[] {
  * Проверяет, является ли строка общим словом, которое не является именем
  */
 function isCommonWord(str: string): boolean {
+	if (!str) return true; // Если строка пустая или undefined, считаем её общим словом
 	const commonWords = [
 		'Вот',
 		'вот',
