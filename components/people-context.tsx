@@ -19,6 +19,7 @@ interface Person {
 	location?: string;
 	expertise?: string[];
 	matchPercentage?: number;
+	isBestMatch?: boolean;
 }
 
 interface PeopleFromChat {
@@ -66,10 +67,14 @@ export function PeopleProvider({ children }: { children: ReactNode }) {
 			console.log('🔍 Extracted people from trigger:', people);
 
 			if (people.length > 0) {
+				// Ранжируем людей по запросу пользователя
+				const rankedPeople = rankPeopleByMatch(people, trigger.payload.query);
+				console.log('🔍 Ranked people:', rankedPeople);
+
 				setPeopleFromChat({
 					category: trigger.payload.category,
 					query: trigger.payload.query,
-					people,
+					people: rankedPeople,
 					timestamp: lastAssistantMessage.timestamp,
 				});
 			}
@@ -79,10 +84,14 @@ export function PeopleProvider({ children }: { children: ReactNode }) {
 			console.log('🔍 Extracted people from message:', people);
 
 			if (people.length > 0) {
+				// Ранжируем людей по общему запросу
+				const rankedPeople = rankPeopleByMatch(people, 'From replica message');
+				console.log('🔍 Ranked people:', rankedPeople);
+
 				setPeopleFromChat({
 					category: 'general',
-					query: 'Из сообщения реплики',
-					people,
+					query: 'From replica message',
+					people: rankedPeople,
 					timestamp: lastAssistantMessage.timestamp,
 				});
 			}
@@ -108,6 +117,246 @@ export function usePeopleFromChat() {
 		throw new Error('usePeopleFromChat must be used within a PeopleProvider');
 	}
 	return context;
+}
+
+/**
+ * Вычисляет процент совпадения между запросом пользователя и профилем человека
+ */
+function calculateMatchPercentage(userQuery: string, person: Person): number {
+	const query = userQuery.toLowerCase();
+	const queryWords = query.split(/\s+/).filter((word) => word.length > 2);
+
+	let score = 0;
+	let maxScore = 100;
+
+	// Ключевые слова для разных типов инвесторов и советников
+	const investorKeywords = [
+		'инвестор',
+		'investor',
+		'angel',
+		'ангел',
+		'vc',
+		'venture',
+		'capital',
+		'фонд',
+		'fund',
+		'partner',
+		'партнер',
+	];
+	const advisorKeywords = [
+		'советник',
+		'advisor',
+		'mentor',
+		'ментор',
+		'коуч',
+		'coach',
+		'консультант',
+		'consultant',
+		'expert',
+		'эксперт',
+	];
+	const aiKeywords = [
+		'ai',
+		'artificial intelligence',
+		'искусственный интеллект',
+		'машинное обучение',
+		'machine learning',
+		'startup',
+		'стартап',
+		'tech',
+		'технологии',
+		'technology',
+		'innovation',
+		'инновации',
+		'software',
+		'софт',
+	];
+	const stageKeywords = [
+		'pre-seed',
+		'seed',
+		'series a',
+		'series b',
+		'early stage',
+		'ранняя стадия',
+		'начальная стадия',
+		'early',
+		'начальная',
+	];
+
+	// Базовая оценка за наличие информации (повышаем с 10 до 25)
+	if (person.role && person.role !== 'Specialist') {
+		score += 25;
+	}
+
+	// Проверяем соответствие роли
+	if (person.role) {
+		const role = person.role.toLowerCase();
+
+		// Если ищем инвесторов - повышаем баллы
+		if (investorKeywords.some((keyword) => query.includes(keyword))) {
+			if (investorKeywords.some((keyword) => role.includes(keyword))) {
+				score += 40; // было 30
+			} else {
+				// Даже если роль не точно совпадает, но есть связь с инвестициями
+				if (
+					role.includes('investment') ||
+					role.includes('invest') ||
+					role.includes('fund') ||
+					role.includes('capital')
+				) {
+					score += 25;
+				}
+			}
+		}
+
+		// Если ищем советников - повышаем баллы
+		if (advisorKeywords.some((keyword) => query.includes(keyword))) {
+			if (advisorKeywords.some((keyword) => role.includes(keyword))) {
+				score += 40; // было 30
+			} else {
+				// Даже если роль не точно совпадает, но есть связь с консультированием
+				if (
+					role.includes('consult') ||
+					role.includes('advise') ||
+					role.includes('expert') ||
+					role.includes('director')
+				) {
+					score += 25;
+				}
+			}
+		}
+
+		// Проверяем соответствие области (AI, tech, etc.) - повышаем баллы
+		if (aiKeywords.some((keyword) => query.includes(keyword))) {
+			if (
+				aiKeywords.some((keyword) => role.includes(keyword)) ||
+				aiKeywords.some((keyword) =>
+					person.description?.toLowerCase().includes(keyword)
+				)
+			) {
+				score += 35; // было 25
+			} else {
+				// Дополнительные баллы за tech-роли
+				if (
+					role.includes('tech') ||
+					role.includes('software') ||
+					role.includes('digital') ||
+					role.includes('innovation')
+				) {
+					score += 20;
+				}
+			}
+		}
+
+		// Проверяем стадию инвестирования
+		if (stageKeywords.some((keyword) => query.includes(keyword))) {
+			if (
+				stageKeywords.some((keyword) => role.includes(keyword)) ||
+				stageKeywords.some((keyword) =>
+					person.description?.toLowerCase().includes(keyword)
+				)
+			) {
+				score += 25; // было 20
+			}
+		}
+	}
+
+	// Проверяем соответствие описания - делаем более щедрым
+	if (person.description) {
+		const description = person.description.toLowerCase();
+
+		// Ищем ключевые слова из запроса в описании - повышаем баллы
+		let descriptionMatches = 0;
+		queryWords.forEach((word) => {
+			if (description.includes(word)) {
+				descriptionMatches++;
+				score += 8; // было 5
+			}
+		});
+
+		// Бонус за множественные совпадения
+		if (descriptionMatches >= 2) {
+			score += 10;
+		}
+
+		// Дополнительные баллы за соответствие тематике - повышаем
+		if (aiKeywords.some((keyword) => query.includes(keyword))) {
+			if (aiKeywords.some((keyword) => description.includes(keyword))) {
+				score += 25; // было 15
+			}
+		}
+
+		// Бонус за длинное и информативное описание
+		if (description.length > 50) {
+			score += 5;
+		}
+	}
+
+	// Проверяем экспертизу - делаем более щедрым
+	if (person.expertise && person.expertise.length > 0) {
+		let expertiseMatches = 0;
+		person.expertise.forEach((skill) => {
+			const skillLower = skill.toLowerCase();
+
+			// Проверяем соответствие AI/tech ключевым словам
+			if (aiKeywords.some((keyword) => query.includes(keyword))) {
+				if (aiKeywords.some((keyword) => skillLower.includes(keyword))) {
+					expertiseMatches++;
+					score += 15; // было 10
+				}
+			}
+
+			// Проверяем соответствие любым словам из запроса
+			queryWords.forEach((word) => {
+				if (skillLower.includes(word)) {
+					expertiseMatches++;
+					score += 8;
+				}
+			});
+		});
+
+		// Бонус за множественные совпадения в экспертизе
+		if (expertiseMatches >= 2) {
+			score += 10;
+		}
+	}
+
+	// Дополнительные бонусы за качество данных
+	if (
+		person.company &&
+		person.company !== '' &&
+		person.company !== 'Not specified'
+	) {
+		score += 5;
+	}
+
+	if (person.location) {
+		score += 3;
+	}
+
+	// Если нет специальных совпадений, но есть базовая информация - даем минимум 20%
+	if (score < 20 && (person.role || person.description)) {
+		score = 20;
+	}
+
+	// Ограничиваем максимальный балл
+	return Math.min(score, maxScore);
+}
+
+/**
+ * Ранжирует список людей по проценту совпадения
+ */
+function rankPeopleByMatch(people: Person[], userQuery: string): Person[] {
+	return people
+		.map((person) => ({
+			...person,
+			matchPercentage: calculateMatchPercentage(userQuery, person),
+		}))
+		.sort((a, b) => (b.matchPercentage || 0) - (a.matchPercentage || 0))
+		.map((person, index) => ({
+			...person,
+			isBestMatch: index === 0,
+		}));
 }
 
 /**
@@ -261,9 +510,9 @@ function extractPeopleFromMessage(messageContent: string): Person[] {
 				const person: Person = {
 					id: `person-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
 					name: fullName,
-					role: 'Специалист',
-					company: 'Не указано',
-					description: 'Информация о специалисте',
+					role: 'Specialist',
+					company: '',
+					description: 'Specialist information',
 				};
 
 				// Пытаемся извлечь дополнительную информацию из контекста
@@ -274,25 +523,66 @@ function extractPeopleFromMessage(messageContent: string): Person[] {
 
 				// Ищем роль/должность в различных форматах
 				const rolePatterns = [
-					// Формат: "**Имя Фамилия** - роль" - поддерживает различные типы апострофов и дефисов
-					/\*\*[А-ЯЁA-Z][а-яёa-z]+(?:[''''-][а-яёa-z]+)*\s+[А-ЯЁA-Z][а-яёa-z]+(?:[''''-][а-яёa-z]+)*\*\*\s*[–-]\s*([^,\n]+)/,
-					// Формат: "**Имя Фамилия**: роль" - поддерживает различные типы апострофов и дефисов
-					/\*\*[А-ЯЁA-Z][а-яёa-z]+(?:[''''-][а-яёa-z]+)*\s+[А-ЯЁA-Z][а-яёa-z]+(?:[''''-][а-яёa-z]+)*\*\*\s*:\s*([^,\n]+)/,
-					// Формат: "Имя Фамилия - роль" - поддерживает различные типы апострофов и дефисов
-					/(?:^|\n)[\s]*[-•*]?\s*[А-ЯЁA-Z][а-яёa-z]+(?:[''''-][а-яёa-z]+)*\s+[А-ЯЁA-Z][а-яёa-z]+(?:[''''-][а-яёa-z]+)*\s*[–-]\s*([^,\n]+)/,
-					// Формат: "Имя Фамилия: роль" - поддерживает различные типы апострофов и дефисов
-					/(?:^|\n)[\s]*[-•*]?\s*[А-ЯЁA-Z][а-яёa-z]+(?:[''''-][а-яёa-z]+)*\s+[А-ЯЁA-Z][а-яёa-z]+(?:[''''-][а-яёa-z]+)*\s*:\s*([^,\n]+)/,
-					// Формат: "Имя Фамилия (роль)" - поддерживает различные типы апострофов и дефисов
-					/(?:^|\n)[\s]*[-•*]?\s*[А-ЯЁA-Z][а-яёa-z]+(?:[''''-][а-яёa-z]+)*\s+[А-ЯЁA-Z][а-яёa-z]+(?:[''''-][а-яёa-z]+)*\s*\(\s*([^)]+)\s*\)/,
-					// Формат: "Имя Фамилия, роль" - поддерживает различные типы апострофов и дефисов
-					/(?:^|\n)[\s]*[-•*]?\s*[А-ЯЁA-Z][а-яёa-z]+(?:[''''-][а-яёa-z]+)*\s+[А-ЯЁA-Z][а-яёa-z]+(?:[''''-][а-яёa-z]+)*\s*,\s*([^,\n]+)/,
+					// Формат: "**Имя Фамилия** - роль" - более точный паттерн
+					new RegExp(
+						`\\*\\*${fullName.replace(
+							/[.*+?^${}()|[\]\\]/g,
+							'\\$&'
+						)}\\*\\*\\s*[–-]\\s*([^.,\n]+)`,
+						'i'
+					),
+					// Формат: "**Имя Фамилия**: роль" - более точный паттерн
+					new RegExp(
+						`\\*\\*${fullName.replace(
+							/[.*+?^${}()|[\]\\]/g,
+							'\\$&'
+						)}\\*\\*\\s*:\\s*([^.,\n]+)`,
+						'i'
+					),
+					// Формат: "Имя Фамилия - роль" - более точный паттерн
+					new RegExp(
+						`${fullName.replace(
+							/[.*+?^${}()|[\]\\]/g,
+							'\\$&'
+						)}\\s*[–-]\\s*([^.,\n]+)`,
+						'i'
+					),
+					// Формат: "Имя Фамилия: роль" - более точный паттерн
+					new RegExp(
+						`${fullName.replace(
+							/[.*+?^${}()|[\]\\]/g,
+							'\\$&'
+						)}\\s*:\\s*([^.,\n]+)`,
+						'i'
+					),
 				];
 
 				for (const rolePattern of rolePatterns) {
 					const roleMatch = context.match(rolePattern);
 					if (roleMatch) {
-						person.role = roleMatch[1].trim();
-						break;
+						let role = roleMatch[1].trim();
+						console.log(`🔍 Raw role extracted: "${role}"`);
+
+						// Фильтруем нежелательные части роли
+						role = role.replace(/\s*(based in|from|в|из)\s+[^.,\n]*$/i, '');
+						role = role.replace(/\s*\.\s*$/, '');
+						role = role.replace(/\s*,\s*$/, '');
+
+						console.log(`🔍 Cleaned role: "${role}"`);
+
+						// Проверяем, что роль не слишком длинная и содержит полезную информацию
+						if (
+							role.length > 0 &&
+							role.length < 100 &&
+							!role.toLowerCase().includes('based in') &&
+							!role.toLowerCase().includes('from') &&
+							!role.toLowerCase().includes('в ') &&
+							!role.toLowerCase().includes('из ')
+						) {
+							person.role = role;
+							console.log(`✅ Final role: "${role}"`);
+							break;
+						}
 					}
 				}
 
@@ -356,16 +646,25 @@ function extractPeopleFromMessage(messageContent: string): Person[] {
 
 				// Ищем локацию
 				const locationPatterns = [
-					/(?:расположение|location|город|city|из|from):\s*([^,\n]+)/i,
-					/(?:из|from)\s+([^,\n]+)/i,
-					/(?:Москва|Санкт-Петербург|Казань|Новосибирск|Екатеринбург|Москва|СПб|МСК|СПб)/i,
+					// Паттерн для "based in" или "from"
+					/(?:based in|from)\s+([А-ЯЁA-Z][а-яёa-z\s]+)/i,
+					// Паттерн для "в городе" или "из города"
+					/(?:в|из)\s+([А-ЯЁA-Z][а-яёa-z\s]+)/i,
+					// Паттерн для упоминания городов
+					/(?:Москва|Санкт-Петербург|Казань|Новосибирск|Екатеринбург|London|New York|Dubai|Barcelona|Paris|Berlin|Tokyo|Singapore|Amsterdam|Stockholm|Copenhagen|Vienna|Zurich|Frankfurt|Munich|Madrid|Rome|Milan|Lisbon|Dublin|Edinburgh|Glasgow|Manchester|Birmingham|Liverpool|Leeds|Sheffield|Bristol|Newcastle|Cardiff|Belfast|Aberdeen|Dundee|Inverness|Stirling|Perth|Dunfermline|Kirkwall|Lerwick|Stornoway|Lochgilphead|Campbeltown|Rothesay|Millport|Ardrossan|Saltcoats|Stevenston|Kilwinning|Dreghorn|Springside|Bourtreehill|Whitehirst Park|Blacklands|Longbar|Skelmorlie|Wemyss Bay|Inverkip|Gourock|Greenock|Port Glasgow|Langbank|Bishopton|Erskine|Renfrew|Paisley|Johnstone|Kilbarchan|Lochwinnoch|Howwood|Bridge of Weir|Brookfield|Crosslee|Houston|Crosslee|Linwood|Elderslie|Ralston|Glenburn|Foxbar|Gallagher Park|Hunterhill|Meikleriggs|Newmains|Nethercraigs|Seedhill|St Mirin|St James|Stanely|Thornly Park|West End|West Primary|Woodside|Abercorn|Anchor|Ardgowan|Barrhead|Beith|Caldwell|Cartsburn|Castlehead|Clydebank|Corseford|Craigends|Dargavel|Dunlop|Elderslie|Gleniffer|Gryffe|Hawkhead|Howwood|Johnstone|Kilbarchan|Lochwinnoch|Lynedoch|Maxwellton|Meikleriggs|Nethercraigs|Newmains|Paisley|Ralston|Renfrew|Seedhill|Stanely|Thornly Park|West End|Woodside|Abercorn|Anchor|Ardgowan|Barrhead|Beith|Caldwell|Cartsburn|Castlehead|Clydebank|Corseford|Craigends|Dargavel|Dunlop|Elderslie|Gleniffer|Gryffe|Hawkhead|Howwood|Johnstone|Kilbarchan|Lochwinnoch|Lynedoch|Maxwellton|Meikleriggs|Nethercraigs|Newmains|Paisley|Ralston|Renfrew|Seedhill|Stanely|Thornly Park|West End|Woodside)/i,
 				];
 
 				for (const locPattern of locationPatterns) {
 					const locMatch = context.match(locPattern);
 					if (locMatch) {
-						person.location = locMatch[1].trim();
-						break;
+						let location = locMatch[1].trim();
+						// Очищаем локацию от лишних слов
+						location = location.replace(/\s*\.\s*$/, '');
+						location = location.replace(/\s*,\s*$/, '');
+						if (location.length > 0 && location.length < 50) {
+							person.location = location;
+							break;
+						}
 					}
 				}
 

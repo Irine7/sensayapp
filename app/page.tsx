@@ -40,7 +40,7 @@ export default function Home() {
 	const { selectReplicaByType } = useReplica();
 	const { setAIChatVisible } = useSidebar();
 
-	// Состояние для результатов матчмейкера (теперь локальное)
+	// State for matchmaker results (now local)
 	const [matchmakerResults, setMatchmakerResults] =
 		useState<MatchmakerResults | null>(null);
 	const [isLoadingResults, setIsLoadingResults] = useState(false);
@@ -101,10 +101,10 @@ export default function Home() {
 	const handleReplicaSelection = (replicaType: ReplicaType) => {
 		setSelectedReplicaType(replicaType);
 
-		// Выбираем реплику по типу
+		// Select replica by type
 		selectReplicaByType(replicaType);
 
-		// Открываем сайдбар с AI чатом
+		// Open sidebar with AI chat
 		setAIChatVisible(true);
 
 		console.log(`Selected replica type: ${replicaType}`);
@@ -113,22 +113,22 @@ export default function Home() {
 	const handleQuickAction = (action: QuickAction) => {
 		if (!selectedReplicaType) return;
 
-		// Переходим к списку людей соответствующей категории
-		const query = `поиск ${action} для ${selectedReplicaType}`;
+		// Navigate to the list of people in the corresponding category
+		const query = `search ${action} for ${selectedReplicaType}`;
 		router.push(`/people/${action}?q=${encodeURIComponent(query)}`);
 	};
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#121316] to-[#0a0a0a]">
+		<div className="min-h-screen bg-gradient-to-br from-black/50 via-gray-900/30 to-black/50">
 			{/* Hero Section */}
 			<section className="relative overflow-hidden">
-				<div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10" />
-				<div className="container mx-auto px-6 py-20 relative">
+				<div className="absolute inset-0 bg-gradient-to-r from-black/50 via-gray-900/30 to-black/50" />
+				<div className="container mx-auto px-6 py-10 relative">
 					<div className="text-center space-y-8 max-w-4xl mx-auto">
 						<Badge
 							variant="outline"
 							className="mb-4 bg-blue-500/10 border-blue-500/20 text-blue-400"
 						>
-							🚀 AI-powered networking
+							AI-powered networking
 						</Badge>
 
 						<h1 className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight">
@@ -192,11 +192,11 @@ export default function Home() {
 			</section>
 
 			{/* Replica Selection */}
-			<section className="py-20 bg-gradient-to-b from-transparent to-gray-900/20">
+			<section className="py-10 bg-gradient-to-br from-black/50 via-gray-900/30 to-black/50">
 				<div className="container mx-auto px-6">
 					<div className="text-center mb-16">
 						<h2 className="text-4xl font-bold text-white mb-4">
-							1️⃣ Choose AI Assistant Type
+							Choose AI Assistant Type
 						</h2>
 						<p className="text-xl text-gray-400 max-w-2xl mx-auto">
 							Defines AI role and interaction method
@@ -246,22 +246,22 @@ export default function Home() {
 							<CardContent className="p-6">
 								<div className="flex items-center justify-between mb-4">
 									<h3 className="text-xl font-semibold text-white">
-										🧠 Память реплики загружена
+										🧠 Replica memory loaded
 									</h3>
 									<Badge className="bg-green-500">
-										{memoryState.memories.length} записей
+										{memoryState.memories.length} records
 									</Badge>
 								</div>
 								<p className="text-gray-400 text-sm">
-									Память реплики автоматически загружена и доступна для
-									использования. Последнее обновление:{' '}
+									Replica memory has been automatically loaded and is available for
+									use. Last update:{' '}
 									{memoryState.lastUpdated
-										? new Date(memoryState.lastUpdated).toLocaleString('ru-RU')
-										: 'Неизвестно'}
+										? new Date(memoryState.lastUpdated).toLocaleString('en-US')
+										: 'Unknown'}
 								</p>
 								{memoryState.error && (
 									<div className="mt-2 text-red-400 text-sm">
-										Ошибка загрузки памяти: {memoryState.error}
+										Memory loading error: {memoryState.error}
 									</div>
 								)}
 							</CardContent>
@@ -284,30 +284,29 @@ export default function Home() {
 					/>
 
 					{/* People List Triggers */}
-					<section className="py-12 bg-gradient-to-b from-gray-900/20 to-transparent">
+					<section className="py-12 bg-gradient-to-br from-black/50 via-gray-900/30 to-black/50">
 						<div className="container mx-auto px-6">
 							<div className="text-center mb-8">
 								<h2 className="text-2xl font-bold text-white mb-2">
-									📋 Подробные списки
+									Detailed Lists
 								</h2>
 								<p className="text-gray-400">
-									Перейдите к детальным спискам людей для более глубокого
-									анализа
+									Go to detailed lists of people for deeper analysis
 								</p>
 							</div>
 
 							<div className="max-w-4xl mx-auto space-y-4">
 								<PeopleListTrigger
 									category="investors"
-									query={`${matchmakerResults.userInterest} инвесторы pre-seed early stage`}
+									query={`${matchmakerResults.userInterest} investors pre-seed early stage`}
 								/>
 								<PeopleListTrigger
 									category="mentors"
-									query={`${matchmakerResults.userInterest} менторы эксперты`}
+									query={`${matchmakerResults.userInterest} mentors experts`}
 								/>
 								<PeopleListTrigger
 									category="founders"
-									query={`${matchmakerResults.userInterest} основатели стартапы`}
+									query={`${matchmakerResults.userInterest} founders startups`}
 								/>
 							</div>
 						</div>
@@ -319,15 +318,15 @@ export default function Home() {
 					<TestAnswerSection />
 
 					{/* AI Trigger Demo */}
-					<section className="py-20 bg-gradient-to-b from-gray-900/20 to-transparent">
+					<section className="py-10 bg-gradient-to-br from-black/50 via-gray-900/30 to-black/50">
 						<div className="container mx-auto px-6">
 							<div className="text-center mb-12">
 								<h2 className="text-4xl font-bold text-white mb-4">
-									🤖 Демонстрация ИИ-триггеров
+									AI Triggers Demo
 								</h2>
 								<p className="text-xl text-gray-400 max-w-2xl mx-auto">
-									Посмотрите, как ИИ-агент может генерировать триггеры для
-									перехода к спискам людей
+									See how the AI agent can generate triggers for navigating to
+									people lists
 								</p>
 							</div>
 							<AITriggerDemo />
@@ -338,11 +337,11 @@ export default function Home() {
 
 			{/* Quick Actions */}
 			{selectedReplicaType && (
-				<section className="py-20 bg-gradient-to-b from-gray-900/20 to-transparent">
+				<section className="py-10 bg-gradient-to-br from-black/50 via-gray-900/30 to-black/50">
 					<div className="container mx-auto px-6">
 						<div className="text-center mb-16">
 							<h2 className="text-4xl font-bold text-white mb-4">
-								2️⃣ Choose Search Goal
+								Choose Search Goal
 							</h2>
 							<p className="text-xl text-gray-400 max-w-2xl mx-auto">
 								Defines the category of people you want to find

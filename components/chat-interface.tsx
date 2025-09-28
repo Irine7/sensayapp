@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { extractChatTrigger, ChatTrigger } from '@/app/lib/utils/parseTrigger';
 import { useHeader } from '@/components/header-context';
-// import { TriggerButtons } from "@/components/trigger-buttons" // Закомментировано по запросу пользователя
+// import { TriggerButtons } from "@/components/trigger-buttons" // Commented out at user's request
 import { SensayReplica } from '@/app/lib/api/sensay-replicas-client';
 import { useReplica } from './replica-provider';
 import ReactMarkdown from 'react-markdown';
@@ -26,20 +26,20 @@ export default function ChatInterface() {
 	const { messages, addMessage, isLoading, clearChat } = useChat();
 	const [input, setInput] = useState('');
 
-	// Используем глобальный контекст для работы с репликами
+	// Use global context for working with replicas
 	const { selectedReplica, selectedReplicaUuid } = useReplica();
 
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const scrollAreaRef = useRef<HTMLDivElement>(null);
-	const isClient = useIsClient(); // Определяем, выполняется ли код на клиенте
+	const isClient = useIsClient(); // Determine if code is running on client
 	const router = useRouter();
 	const { setTheme } = useTheme();
 	const { setHeaderState } = useHeader();
 
-	// Флаг для отслеживания первого ответа реплики
+	// Flag to track first replica response
 	const [firstResponseSent, setFirstResponseSent] = useState(false);
 
-	// Прокрутка к последнему сообщению при загрузке компонента или изменении сообщений
+	// Scroll to last message when component loads or messages change
 	useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
 	}, [messages]);
@@ -97,14 +97,14 @@ export default function ChatInterface() {
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		if (input.trim() && !isLoading) {
-			// Передаем UUID выбранной реплики при отправке сообщения
-			// Используем значение из глобального контекста
+			// Pass selected replica UUID when sending message
+			// Use value from global context
 			const replicaUuid = selectedReplicaUuid || undefined;
 			console.log('Sending message to replica UUID:', replicaUuid);
 			addMessage({ role: 'user', content: input.trim() }, replicaUuid);
 			setInput('');
 
-			// Устанавливаем флаг первого ответа в true после отправки первого сообщения пользователем
+			// Set first response flag to true after user sends first message
 			if (!firstResponseSent) {
 				setFirstResponseSent(true);
 			}
@@ -113,30 +113,31 @@ export default function ChatInterface() {
 
 	const handleClearChat = () => {
 		clearChat();
-		// Сбрасываем флаг первого ответа при очистке чата
+		// Reset first response flag when clearing chat
 		setFirstResponseSent(false);
 
-		// После очистки чата отображаем начальный запрос текущего активного ИИ-агента
+		// After clearing chat, display initial query from current active AI agent
 		if (selectedReplica) {
-			// Используем реплику из глобального контекста
+			// Use replica from global context
 			const welcomeMessage =
 				selectedReplica.greeting ||
-				`Привет! Я ${selectedReplica.name}. Чем я могу помочь?`;
+				`Hello! I'm ${selectedReplica.name}. How can I help you?`;
 
 			console.log(
 				'Sending welcome message with replica UUID:',
 				selectedReplicaUuid
 			);
-			// Передаём UUID выбранной реплики для корректной обработки последующих сообщений
+			// Pass selected replica UUID for correct processing of subsequent messages
 			addMessage(
 				{ role: 'assistant', content: welcomeMessage },
 				selectedReplicaUuid
 			);
 		} else {
-			// Если реплика не выбрана, используем стандартное приветствие Mafia Coach
+			// If no replica is selected, use standard Mafia Coach greeting
 			addMessage({
 				role: 'assistant',
-				content: 'Привет! Я Mafia Coach. Как я могу помочь тебе в игре Мафия?',
+				content:
+					"Hello! I'm Mafia Coach. How can I help you in the Mafia game?",
 			});
 		}
 	};
@@ -149,7 +150,7 @@ export default function ChatInterface() {
 		<div className="flex flex-col h-full bg-background">
 			<div className="p-3 border-b text-white flex items-center justify-between">
 				<div className="flex items-center space-x-2">
-					{/* Отображение текущей реплики из глобального контекста */}
+					{/* Display current replica from global context */}
 					<div className="flex items-center gap-2 px-2">
 						<div className="flex items-center gap-2 max-w-[180px]">
 							{selectedReplica ? (
@@ -294,13 +295,13 @@ export default function ChatInterface() {
 									<p className="text-sm">{message.content}</p>
 								)}
 								<p className="text-xs mt-1 opacity-60">
-									{/* Форматировать дату только на клиенте, на сервере показать заглушку */}
+									{/* Format date only on client, show placeholder on server */}
 									{isClient
 										? format(new Date(message.timestamp), 'MMM d, yyyy h:mm a')
 										: ''}
 								</p>
-								{/* Отображаем кнопки с триггерами только после сообщений ассистента */}
-								{/* Триггеры закомментированы по запросу пользователя */}
+								{/* Show trigger buttons only after assistant messages */}
+								{/* Triggers commented out at user's request */}
 								{/* {message.role === "assistant" && <TriggerButtons className="mt-2" selectedReplica={selectedReplica} />} */}
 							</div>
 						</div>
