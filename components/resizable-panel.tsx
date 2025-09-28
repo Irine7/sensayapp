@@ -29,8 +29,8 @@ export default function ResizablePanel({
 		const handleMouseMove = (e: MouseEvent) => {
 			if (!isResizing) return;
 
-			// Calculate new width based on mouse position
-			const newWidth = e.clientX;
+			// Calculate new width based on mouse position from right edge
+			const newWidth = window.innerWidth - e.clientX;
 
 			// Apply constraints
 			if (newWidth >= minWidth && newWidth <= maxWidth) {
@@ -68,11 +68,14 @@ export default function ResizablePanel({
 
 	return (
 		<div className="flex h-full w-full">
+			{/* Main content */}
+			<div className="flex-1 h-full overflow-auto">{children}</div>
+
 			{/* Resizable chat panel */}
 			<div
 				ref={resizableRef}
 				className={cn(
-					'h-full relative border-r border-border/50 bg-surface-50 dark:bg-surface-50',
+					'h-full relative border-l border-border/50 bg-surface-50 dark:bg-surface-50',
 					className
 				)}
 				style={{
@@ -84,13 +87,10 @@ export default function ResizablePanel({
 				<ChatInterface />
 				{/* Resize handle */}
 				<div
-					className="absolute top-0 right-0 w-1 h-full bg-border/50 hover:bg-primary cursor-ew-resize transition-colors duration-200"
+					className="absolute top-0 left-0 w-1 h-full bg-border/50 hover:bg-primary cursor-ew-resize transition-colors duration-200"
 					onMouseDown={startResizing}
 				/>
 			</div>
-
-			{/* Main content */}
-			<div className="flex-1 h-full overflow-auto">{children}</div>
 		</div>
 	);
 }
