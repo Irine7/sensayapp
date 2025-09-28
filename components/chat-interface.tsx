@@ -74,6 +74,20 @@ export default function ChatInterface() {
 			case 'headerState':
 				setHeaderState(trigger.payload);
 				break;
+			case 'showPeopleList':
+				if (
+					trigger.payload &&
+					typeof trigger.payload === 'object' &&
+					'category' in trigger.payload &&
+					'query' in trigger.payload
+				) {
+					const { category, query } = trigger.payload as {
+						category: string;
+						query: string;
+					};
+					router.push(`/people/${category}?q=${encodeURIComponent(query)}`);
+				}
+				break;
 			default:
 				// Unknown trigger
 				break;

@@ -1,15 +1,37 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useRouter } from 'next/navigation';
 import { useReplica } from '@/components/replica-provider';
 import { useSidebar } from '@/components/sidebar-context';
+import PeopleNamesDisplay from '@/components/people-names-display';
+import PeopleNamesList from '@/components/people-names-list';
+import PeopleListTrigger from '@/components/people-list-trigger';
+import AITriggerDemo from '@/components/ai-trigger-demo';
+import TestAnswerSection from '@/components/test-answer-section';
 
 type ReplicaType = 'matchmaker' | 'mentor' | 'buddy';
 type QuickAction = 'investors' | 'mentors' | 'founders';
+
+interface MatchPerson {
+	name: string;
+	role: string;
+	company: string;
+	description: string;
+	matchPercentage: number;
+	isBestMatch?: boolean;
+	location?: string;
+	expertise?: string[];
+}
+
+interface MatchmakerResults {
+	userInterest: string;
+	matches: MatchPerson[];
+	bestMatch: MatchPerson;
+}
 
 export default function Home() {
 	const [selectedReplicaType, setSelectedReplicaType] =
@@ -17,6 +39,11 @@ export default function Home() {
 	const router = useRouter();
 	const { selectReplicaByType } = useReplica();
 	const { setAIChatVisible } = useSidebar();
+
+	// Состояние для результатов матчмейкера (теперь локальное)
+	const [matchmakerResults, setMatchmakerResults] =
+		useState<MatchmakerResults | null>(null);
+	const [isLoadingResults, setIsLoadingResults] = useState(false);
 
 	const replicaTypes = [
 		{
@@ -86,13 +113,10 @@ export default function Home() {
 	const handleQuickAction = (action: QuickAction) => {
 		if (!selectedReplicaType) return;
 
-		// Здесь будет логика перехода к поиску с выбранной репликой и целью
-		console.log(
-			`Starting search with ${selectedReplicaType} replica for ${action}`
-		);
-		// router.push(`/search?replica=${selectedReplicaType}&action=${action}`);
+		// Переходим к списку людей соответствующей категории
+		const query = `поиск ${action} для ${selectedReplicaType}`;
+		router.push(`/people/${action}?q=${encodeURIComponent(query)}`);
 	};
-
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#121316] to-[#0a0a0a]">
 			{/* Hero Section */}
@@ -213,6 +237,104 @@ export default function Home() {
 					</div>
 				</div>
 			</section>
+
+			{/* Memory Status */}
+			{/* {memoryState.memories.length > 0 && (
+				<section className="py-10 bg-gradient-to-b from-gray-900/20 to-transparent">
+					<div className="container mx-auto px-6">
+						<Card className="bg-gray-900/50 border-gray-800 max-w-4xl mx-auto">
+							<CardContent className="p-6">
+								<div className="flex items-center justify-between mb-4">
+									<h3 className="text-xl font-semibold text-white">
+										🧠 Память реплики загружена
+									</h3>
+									<Badge className="bg-green-500">
+										{memoryState.memories.length} записей
+									</Badge>
+								</div>
+								<p className="text-gray-400 text-sm">
+									Память реплики автоматически загружена и доступна для
+									использования. Последнее обновление:{' '}
+									{memoryState.lastUpdated
+										? new Date(memoryState.lastUpdated).toLocaleString('ru-RU')
+										: 'Неизвестно'}
+								</p>
+								{memoryState.error && (
+									<div className="mt-2 text-red-400 text-sm">
+										Ошибка загрузки памяти: {memoryState.error}
+									</div>
+								)}
+							</CardContent>
+						</Card>
+					</div>
+				</section>
+			)} */}
+
+			{/* Matchmaker Results */}
+			{matchmakerResults ? (
+				<>
+					<PeopleNamesDisplay
+						userInterest={matchmakerResults.userInterest}
+						matches={matchmakerResults.matches}
+						bestMatch={matchmakerResults.bestMatch}
+					/>
+					<PeopleNamesList
+						matches={matchmakerResults.matches}
+						bestMatch={matchmakerResults.bestMatch}
+					/>
+
+					{/* People List Triggers */}
+					<section className="py-12 bg-gradient-to-b from-gray-900/20 to-transparent">
+						<div className="container mx-auto px-6">
+							<div className="text-center mb-8">
+								<h2 className="text-2xl font-bold text-white mb-2">
+									📋 Подробные списки
+								</h2>
+								<p className="text-gray-400">
+									Перейдите к детальным спискам людей для более глубокого
+									анализа
+								</p>
+							</div>
+
+							<div className="max-w-4xl mx-auto space-y-4">
+								<PeopleListTrigger
+									category="investors"
+									query={`${matchmakerResults.userInterest} инвесторы pre-seed early stage`}
+								/>
+								<PeopleListTrigger
+									category="mentors"
+									query={`${matchmakerResults.userInterest} менторы эксперты`}
+								/>
+								<PeopleListTrigger
+									category="founders"
+									query={`${matchmakerResults.userInterest} основатели стартапы`}
+								/>
+							</div>
+						</div>
+					</section>
+				</>
+			) : (
+				<>
+					{/* Test Answer Section */}
+					<TestAnswerSection />
+
+					{/* AI Trigger Demo */}
+					<section className="py-20 bg-gradient-to-b from-gray-900/20 to-transparent">
+						<div className="container mx-auto px-6">
+							<div className="text-center mb-12">
+								<h2 className="text-4xl font-bold text-white mb-4">
+									🤖 Демонстрация ИИ-триггеров
+								</h2>
+								<p className="text-xl text-gray-400 max-w-2xl mx-auto">
+									Посмотрите, как ИИ-агент может генерировать триггеры для
+									перехода к спискам людей
+								</p>
+							</div>
+							<AITriggerDemo />
+						</div>
+					</section>
+				</>
+			)}
 
 			{/* Quick Actions */}
 			{selectedReplicaType && (

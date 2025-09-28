@@ -8,6 +8,8 @@ import { SidebarProvider } from '@/components/sidebar-context';
 import { HeaderProvider } from '@/components/header-context';
 import ReplicaProvider from '@/components/replica-provider';
 import ChatProvider from '@/components/chat-provider';
+import { MemoryProvider } from '@/components/memory-provider';
+import { PeopleProvider } from '@/components/people-context';
 import ResizablePanel from '@/components/resizable-panel';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -37,14 +39,18 @@ export default function RootLayout({
 					<HeaderProvider>
 						<SidebarProvider>
 							<ReplicaProvider>
-								<ChatProvider>
-									<div className="flex flex-col h-full">
-										<SimpleHeader />
-										<main className="flex-1 flex overflow-auto">
-											<ResizablePanel>{children}</ResizablePanel>
-										</main>
-									</div>
-								</ChatProvider>
+								<MemoryProvider>
+									<ChatProvider>
+										<PeopleProvider>
+											<div className="flex flex-col h-full">
+												<SimpleHeader />
+												<main className="flex-1 flex overflow-auto">
+													<ResizablePanel>{children}</ResizablePanel>
+												</main>
+											</div>
+										</PeopleProvider>
+									</ChatProvider>
+								</MemoryProvider>
 							</ReplicaProvider>
 						</SidebarProvider>
 					</HeaderProvider>
