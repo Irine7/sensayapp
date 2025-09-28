@@ -1,6 +1,6 @@
 /**
- * Утилита для генерации триггеров перехода к списку людей
- * Используется ИИ-агентом для создания навигационных триггеров
+ * Utility for generating people list navigation triggers
+ * Used by AI agent to create navigation triggers
  */
 
 export interface PeopleListTriggerPayload {
@@ -9,7 +9,7 @@ export interface PeopleListTriggerPayload {
 }
 
 /**
- * Генерирует триггер для перехода к списку людей
+ * Generates trigger for navigating to people list
  */
 export function generatePeopleListTrigger(
 	category: 'investors' | 'mentors' | 'founders',
@@ -27,7 +27,7 @@ export function generatePeopleListTrigger(
 }
 
 /**
- * Генерирует сообщение с триггером для ИИ-агента
+ * Generates message with trigger for AI agent
  */
 export function generatePeopleListMessage(
 	category: 'investors' | 'mentors' | 'founders',
@@ -37,20 +37,20 @@ export function generatePeopleListMessage(
 	const trigger = generatePeopleListTrigger(category, query);
 
 	const categoryNames = {
-		investors: 'инвесторы',
-		mentors: 'менторы',
-		founders: 'основатели',
+		investors: 'investors',
+		mentors: 'mentors',
+		founders: 'founders',
 	};
 
 	const baseMessage =
 		additionalMessage ||
-		`Вот список ${categoryNames[category]}, соответствующих вашему запросу "${query}":`;
+		`Here's the list of ${categoryNames[category]} matching your query "${query}":`;
 
-	return `${baseMessage}\n\n${trigger}\n\nПерейдите по ссылке выше для просмотра подробного списка.`;
+	return `${baseMessage}\n\n${trigger}\n\nClick the link above to view the detailed list.`;
 }
 
 /**
- * Определяет категорию людей на основе запроса пользователя
+ * Determines people category based on user query
  */
 export function detectPeopleCategory(
 	userQuery: string
@@ -58,28 +58,26 @@ export function detectPeopleCategory(
 	const query = userQuery.toLowerCase();
 
 	if (
-		query.includes('инвестор') ||
+		query.includes('investor') ||
 		query.includes('investment') ||
-		query.includes('фонд') ||
+		query.includes('fund') ||
 		query.includes('capital')
 	) {
 		return 'investors';
 	}
 
 	if (
-		query.includes('ментор') ||
 		query.includes('mentor') ||
-		query.includes('советник') ||
-		query.includes('эксперт')
+		query.includes('advisor') ||
+		query.includes('expert')
 	) {
 		return 'mentors';
 	}
 
 	if (
-		query.includes('основатель') ||
 		query.includes('founder') ||
-		query.includes('стартап') ||
-		query.includes('предприниматель')
+		query.includes('startup') ||
+		query.includes('entrepreneur')
 	) {
 		return 'founders';
 	}
@@ -88,18 +86,18 @@ export function detectPeopleCategory(
 }
 
 /**
- * Извлекает ключевые слова для поиска из запроса пользователя
+ * Extracts search keywords from user query
  */
 export function extractSearchKeywords(userQuery: string): string {
-	// Убираем стоп-слова и оставляем ключевые термины
+	// Remove stop words and keep key terms
 	const stopWords = [
-		'найти',
-		'ищу',
-		'нужны',
-		'хочу',
-		'показать',
-		'список',
-		'люди',
+		'find',
+		'looking',
+		'need',
+		'want',
+		'show',
+		'list',
+		'people',
 	];
 
 	let keywords = userQuery.toLowerCase();
