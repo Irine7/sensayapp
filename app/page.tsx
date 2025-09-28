@@ -5,15 +5,18 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useRouter } from 'next/navigation';
+import { useReplica } from '@/components/replica-provider';
+import { useSidebar } from '@/components/sidebar-context';
 
 type ReplicaType = 'matchmaker' | 'mentor' | 'buddy';
 type QuickAction = 'investors' | 'mentors' | 'founders';
 
 export default function Home() {
-	const [selectedReplica, setSelectedReplica] = useState<ReplicaType | null>(
-		null
-	);
+	const [selectedReplicaType, setSelectedReplicaType] =
+		useState<ReplicaType | null>(null);
 	const router = useRouter();
+	const { selectReplicaByType } = useReplica();
+	const { setAIChatVisible } = useSidebar();
 
 	const replicaTypes = [
 		{
@@ -68,14 +71,26 @@ export default function Home() {
 		},
 	];
 
+	const handleReplicaSelection = (replicaType: ReplicaType) => {
+		setSelectedReplicaType(replicaType);
+
+		// Выбираем реплику по типу
+		selectReplicaByType(replicaType);
+
+		// Открываем сайдбар с AI чатом
+		setAIChatVisible(true);
+
+		console.log(`Selected replica type: ${replicaType}`);
+	};
+
 	const handleQuickAction = (action: QuickAction) => {
-		if (!selectedReplica) return;
+		if (!selectedReplicaType) return;
 
 		// Здесь будет логика перехода к поиску с выбранной репликой и целью
 		console.log(
-			`Starting search with ${selectedReplica} replica for ${action}`
+			`Starting search with ${selectedReplicaType} replica for ${action}`
 		);
-		// router.push(`/search?replica=${selectedReplica}&action=${action}`);
+		// router.push(`/search?replica=${selectedReplicaType}&action=${action}`);
 	};
 
 	return (
@@ -171,11 +186,11 @@ export default function Home() {
 								className={`bg-gray-900/50 border-gray-800 ${
 									replica.borderColor
 								} transition-all duration-300 cursor-pointer ${
-									selectedReplica === replica.id
+									selectedReplicaType === replica.id
 										? 'ring-2 ring-blue-500/50 border-blue-500/50'
 										: 'hover:transform hover:scale-105'
 								}`}
-								onClick={() => setSelectedReplica(replica.id)}
+								onClick={() => handleReplicaSelection(replica.id)}
 							>
 								<CardContent className="p-8 text-center space-y-6">
 									<div className="text-6xl mb-4">{replica.icon}</div>
@@ -185,7 +200,7 @@ export default function Home() {
 									<p className="text-gray-400 leading-relaxed">
 										{replica.description}
 									</p>
-									{selectedReplica === replica.id && (
+									{selectedReplicaType === replica.id && (
 										<Badge
 											className={`bg-gradient-to-r ${replica.color} text-white`}
 										>
@@ -200,7 +215,7 @@ export default function Home() {
 			</section>
 
 			{/* Quick Actions */}
-			{selectedReplica && (
+			{selectedReplicaType && (
 				<section className="py-20 bg-gradient-to-b from-gray-900/20 to-transparent">
 					<div className="container mx-auto px-6">
 						<div className="text-center mb-16">
@@ -244,7 +259,7 @@ export default function Home() {
 									variant="outline"
 									className="text-blue-400 border-blue-400"
 								>
-									{replicaTypes.find((r) => r.id === selectedReplica)?.name}
+									{replicaTypes.find((r) => r.id === selectedReplicaType)?.name}
 								</Badge>
 							</div>
 						</div>
