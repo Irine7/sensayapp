@@ -11,7 +11,7 @@ interface SidebarContextType {
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
 export function SidebarProvider({ children }: { children: ReactNode }) {
-	const [isAIChatVisible, setIsAIChatVisible] = useState(true);
+	const [isAIChatVisible, setIsAIChatVisible] = useState(false);
 
 	const toggleAIChat = () => {
 		setIsAIChatVisible((prev) => !prev);

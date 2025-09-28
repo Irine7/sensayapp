@@ -40,7 +40,7 @@ export default function RootLayout({
 								<ChatProvider>
 									<div className="flex flex-col h-full">
 										<SimpleHeader />
-										<main className="flex-1 flex overflow-hidden">
+										<main className="flex-1 flex overflow-auto">
 											<ResizablePanel>{children}</ResizablePanel>
 										</main>
 									</div>

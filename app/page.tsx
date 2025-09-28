@@ -20,7 +20,7 @@ export default function Home() {
 			id: 'matchmaker' as ReplicaType,
 			name: 'Matchmaker',
 			icon: '💕',
-			description: 'Ищет совпадения между участниками и оценивает match %',
+			description: 'Finds matches between participants and evaluates match %',
 			color: 'from-pink-500 to-rose-600',
 			borderColor: 'hover:border-pink-500/50',
 		},
@@ -29,7 +29,7 @@ export default function Home() {
 			name: 'Mentor',
 			icon: '🎯',
 			description:
-				'Даёт советы, как презентовать стартап, кого подойти, что спросить',
+				'Provides advice on how to present your startup, who to approach, what to ask',
 			color: 'from-blue-500 to-cyan-600',
 			borderColor: 'hover:border-blue-500/50',
 		},
@@ -38,7 +38,7 @@ export default function Home() {
 			name: 'Buddy',
 			icon: '🤝',
 			description:
-				'Помогает новичкам ориентироваться на конференции, подсказывает простые точки входа',
+				'Helps newcomers navigate conferences, suggests simple entry points',
 			color: 'from-green-500 to-emerald-600',
 			borderColor: 'hover:border-green-500/50',
 		},
@@ -49,21 +49,21 @@ export default function Home() {
 			id: 'investors' as QuickAction,
 			name: 'Find Investors',
 			icon: '💰',
-			description: 'Найди инвесторов, подходящих под ваш стартап',
+			description: 'Find investors suitable for your startup',
 			color: 'from-yellow-500 to-amber-600',
 		},
 		{
 			id: 'mentors' as QuickAction,
 			name: 'Find Mentors',
 			icon: '🧠',
-			description: 'Найди подходящих экспертов и наставников',
+			description: 'Find suitable experts and mentors',
 			color: 'from-purple-500 to-violet-600',
 		},
 		{
 			id: 'founders' as QuickAction,
 			name: 'Find Fellow Founders',
 			icon: '🚀',
-			description: 'Найди других фаундеров для обмена опытом',
+			description: 'Find other founders for experience exchange',
 			color: 'from-orange-500 to-red-600',
 		},
 	];
@@ -106,10 +106,11 @@ export default function Home() {
 											</div>
 											<div>
 												<h3 className="text-lg text-left font-semibold text-white">
-													Выберите ассистента
+													Choose Assistant
 												</h3>
 												<p className="text-gray-400">
-													Определите его характер и роль (Matchmaker, Mentor или Buddy)
+													Define its character and role (Matchmaker, Mentor or
+													Buddy)
 												</p>
 											</div>
 										</div>
@@ -120,10 +121,10 @@ export default function Home() {
 											</div>
 											<div>
 												<h3 className="text-lg text-left font-semibold text-white">
-													Выберите цель
+													Choose Goal
 												</h3>
 												<p className="text-gray-400">
-													Определите категорию людей (Investors, Mentors,
+													Define the category of people (Investors, Mentors,
 													Founders)
 												</p>
 											</div>
@@ -135,10 +136,11 @@ export default function Home() {
 											</div>
 											<div>
 												<h3 className="text-lg text-left font-semibold text-white">
-													Получите результат
+													Get Results
 												</h3>
 												<p className="text-gray-400">
-													AI анализирует и выдаёт рекомендации с рейтингом match
+													AI analyzes and provides recommendations with match
+													rating
 												</p>
 											</div>
 										</div>
@@ -155,10 +157,10 @@ export default function Home() {
 				<div className="container mx-auto px-6">
 					<div className="text-center mb-16">
 						<h2 className="text-4xl font-bold text-white mb-4">
-							1️⃣ Выберите тип AI-ассистента
+							1️⃣ Choose AI Assistant Type
 						</h2>
 						<p className="text-xl text-gray-400 max-w-2xl mx-auto">
-							Определяет роль AI и метод взаимодействия
+							Defines AI role and interaction method
 						</p>
 					</div>
 
@@ -187,7 +189,7 @@ export default function Home() {
 										<Badge
 											className={`bg-gradient-to-r ${replica.color} text-white`}
 										>
-											Выбрано
+											Selected
 										</Badge>
 									)}
 								</CardContent>
@@ -203,10 +205,10 @@ export default function Home() {
 					<div className="container mx-auto px-6">
 						<div className="text-center mb-16">
 							<h2 className="text-4xl font-bold text-white mb-4">
-								2️⃣ Выберите цель поиска
+								2️⃣ Choose Search Goal
 							</h2>
 							<p className="text-xl text-gray-400 max-w-2xl mx-auto">
-								Определяет категорию людей, которых вы хотите найти
+								Defines the category of people you want to find
 							</p>
 						</div>
 
@@ -228,7 +230,7 @@ export default function Home() {
 										<Button
 											className={`w-full bg-gradient-to-r ${action.color} hover:opacity-90 text-white`}
 										>
-											Начать поиск
+											Start Search
 										</Button>
 									</CardContent>
 								</Card>
@@ -237,7 +239,7 @@ export default function Home() {
 
 						<div className="text-center mt-12">
 							<div className="inline-flex items-center space-x-2 bg-gray-900/50 border border-gray-700 rounded-full px-6 py-3">
-								<span className="text-gray-400">Выбранный ассистент:</span>
+								<span className="text-gray-400">Selected Assistant:</span>
 								<Badge
 									variant="outline"
 									className="text-blue-400 border-blue-400"

@@ -63,7 +63,7 @@ export default function ResizablePanel({
 	};
 
 	if (!isAIChatVisible) {
-		return <div className="w-full h-full">{children}</div>;
+		return <div className="w-full h-full overflow-auto">{children}</div>;
 	}
 
 	return (
