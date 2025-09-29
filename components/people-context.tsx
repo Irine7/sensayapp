@@ -43,12 +43,12 @@ export function PeopleProvider({ children }: { children: ReactNode }) {
 	);
 	const { messages } = useChat();
 
-	// Очистка списка людей
+	// Clear people list
 	const clearPeopleFromChat = () => {
 		setPeopleFromChat(null);
 	};
 
-	// Отслеживание сообщений для извлечения списков людей
+	// Track messages to extract people lists
 	useEffect(() => {
 		if (!messages.length) return;
 

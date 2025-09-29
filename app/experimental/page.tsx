@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 export default function ExperimentalPage() {
-	// Используем глобальный контекст реплик
+	// Use global replica context
 	const { replicas, loading, refreshReplicas } = useReplica();
 
 	const [messages, setMessages] = useState<{ role: string; content: string }[]>(
@@ -255,7 +255,7 @@ export default function ExperimentalPage() {
 										key={`${msg.role}-${index}`}
 										className={`p-3 rounded-lg ${
 											msg.role === 'user'
-												? 'bg-mafia-600 text-white ml-auto max-w-[80%]'
+												? 'bg-blue-600 text-white ml-auto max-w-[80%]'
 												: msg.role === 'assistant'
 												? 'bg-gray-700 text-white max-w-[80%]'
 												: 'bg-gray-800 text-white text-xs italic max-w-full'
@@ -297,7 +297,7 @@ export default function ExperimentalPage() {
 							<Button
 								type="submit"
 								disabled={isLoading || !userInput.trim() || !replicaId}
-								className="bg-mafia-600 hover:bg-mafia-700 text-white"
+								variant="secondary"
 							>
 								{isLoading ? (
 									<Loader2 className="h-4 w-4 animate-spin" />

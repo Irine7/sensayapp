@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { ModeToggle } from './mode-toggle';
 import { Button } from '@/components/ui/button';
@@ -52,9 +53,13 @@ export default function SimpleHeader() {
 							pathname === '/' ? 'text-primary' : 'text-foreground'
 						}`}
 					>
-						<h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent-500 bg-clip-text text-transparent">
-							Evoo
-						</h1>
+						<Image
+							src="/logo.png"
+							alt="Evoo"
+							width={300}
+							height={90}
+							className="h-10 w-auto"
+						/>
 					</Link>
 
 					<nav className="hidden md:flex items-center gap-6">

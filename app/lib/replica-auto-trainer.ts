@@ -20,7 +20,7 @@ export class ReplicaAutoTrainer {
 	}
 
 	/**
-	 * Автоматически обучает реплику на основе её типа
+	 * Automatically trains replica based on its type
 	 */
 	async autoTrainReplica(
 		replicaUuid: string,
@@ -43,16 +43,16 @@ export class ReplicaAutoTrainer {
 		};
 
 		try {
-			// 1. Обучаем системным сообщениям и поведению
+			// 1. Train system messages and behavior
 			await this.trainSystemBehavior(replicaUuid, template, results);
 
-			// 2. Обучаем специализированными материалами
+			// 2. Train specialized materials
 			await this.trainSpecializedMaterials(replicaUuid, template, results);
 
-			// 3. Обучаем примерами диалогов
+			// 3. Train example dialogues
 			await this.trainExampleDialogues(replicaUuid, template, results);
 
-			// 4. Обучаем метриками и оценками
+			// 4. Train metrics and evaluations
 			await this.trainMetrics(replicaUuid, template, results);
 
 			results.success = results.errors.length === 0;

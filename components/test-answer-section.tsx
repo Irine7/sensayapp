@@ -24,7 +24,7 @@ export default function TestAnswerSection() {
 
 	console.log('🧪 TestAnswerSection - peopleFromChat:', peopleFromChat);
 
-	// Функции для определения цвета совпадения
+	// Functions for determining match color
 	const getMatchColor = (percentage: number) => {
 		if (percentage >= 80) return 'text-green-500';
 		if (percentage >= 60) return 'text-blue-500';
@@ -60,7 +60,7 @@ export default function TestAnswerSection() {
 							<Sparkles className="h-10 w-10 text-white" />
 						</div>
 						<h2 className="text-5xl font-bold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent mb-6">
-							🧪 Smart Matches
+							Smart Matches
 						</h2>
 						<p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
 							Discover the perfect connections powered by AI intelligence

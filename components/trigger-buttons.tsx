@@ -10,7 +10,7 @@ import { SensayReplica } from '@/app/lib/api/sensay-replicas-client';
 import { useChat } from './chat-provider';
 import { useReplica } from './replica-context';
 
-// Расширенный тип триггера, включающий возможность вопросов
+// Extended trigger type including question capability
 type QuestionTrigger = {
 	action: 'question';
 	payload: string;
@@ -148,7 +148,7 @@ export function TriggerButtons({
 					key={trigger.id}
 					variant="outline"
 					size="sm"
-					className="bg-mafia-50 border-mafia-200 hover:bg-mafia-100 text-mafia-800 text-xs font-medium dark:bg-mafia-900 dark:border-mafia-700 dark:text-mafia-200 flex items-center"
+					className="text-xs font-medium flex items-center"
 					onClick={() => handleTrigger(trigger.trigger)}
 				>
 					{trigger.icon}

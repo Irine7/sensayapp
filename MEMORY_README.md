@@ -1,14 +1,14 @@
-# Система памяти реплики
+# Replica Memory System
 
-## Обзор
+## Overview
 
-Добавлена глобальная система состояния для хранения и управления памятью реплики из Sensay API. Память автоматически загружается при выборе реплики и доступна во всем приложении.
+Added global state system for storing and managing replica memory from Sensay API. Memory is automatically loaded when selecting a replica and is available throughout the application.
 
-## Компоненты
+## Components
 
 ### 1. MemoryProvider (`components/memory-provider.tsx`)
 
-Глобальный провайдер состояния для управления памятью реплики:
+Global state provider for managing replica memory:
 
 ```typescript
 interface ReplicaMemory {
@@ -30,125 +30,125 @@ interface ReplicaMemory {
 }
 ```
 
-**Методы:**
+**Methods:**
 
-- `loadMemories(replicaUUID: string)` - загрузить память реплики
-- `refreshMemories()` - обновить текущую память
-- `clearMemories()` - очистить память
-- `addMemory(memory: ReplicaMemory)` - добавить запись в память
+- `loadMemories(replicaUUID: string)` - load replica memory
+- `refreshMemories()` - refresh current memory
+- `clearMemories()` - clear memory
+- `addMemory(memory: ReplicaMemory)` - add memory entry
 
 ### 2. API Endpoint (`app/api/sensay/replicas/[id]/memory/route.ts`)
 
-GET endpoint для получения памяти реплики:
+GET endpoint for retrieving replica memory:
 
 ```
 GET /api/sensay/replicas/{replicaUUID}/memory
 ```
 
-Возвращает:
+Returns:
 
 ```json
 {
-  "success": true,
-  "memories": [...],
-  "total": 10,
-  "replicaUUID": "uuid"
+  "memories": [
+    {
+      "id": "memory_id",
+      "replicaUUID": "replica_uuid",
+      "content": "Memory content",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "sources": [...],
+      "role": "user",
+      "source": "web",
+      "user_uuid": "user_uuid"
+    }
+  ]
 }
 ```
 
-### 3. Хук useReplicaMemory (`hooks/use-replica-memory.ts`)
+### 3. Hook (`hooks/use-replica-memory.ts`)
 
-Автоматически загружает память при выборе реплики:
+Custom hook for using memory in components:
 
 ```typescript
-const { memoryState, loadMemories } = useReplicaMemory();
+const {
+	memories,
+	loading,
+	error,
+	loadMemories,
+	refreshMemories,
+	clearMemories,
+	addMemory,
+} = useReplicaMemory();
 ```
 
-### 4. Тестовая страница (`app/test/page.tsx`)
+## Usage
 
-Страница `/test` для просмотра и тестирования памяти реплики:
+### 1. Wrap your app with MemoryProvider
 
-- Ввод UUID реплики
-- Загрузка памяти
-- Поиск по содержимому
-- Отображение статистики
-- Просмотр источников RAG
+```tsx
+// app/layout.tsx
+import { MemoryProvider } from '@/components/memory-provider';
 
-## Использование
+export default function RootLayout({ children }) {
+	return (
+		<html>
+			<body>
+				<MemoryProvider>{children}</MemoryProvider>
+			</body>
+		</html>
+	);
+}
+```
 
-### Автоматическая загрузка
+### 2. Use memory in components
 
-Память автоматически загружается при выборе реплики:
-
-```typescript
+```tsx
 import { useReplicaMemory } from '@/hooks/use-replica-memory';
 
 function MyComponent() {
-	const { memoryState } = useReplicaMemory();
+	const { memories, loadMemories } = useReplicaMemory();
 
-	// memoryState.memories содержит загруженную память
-	// memoryState.isLoading показывает статус загрузки
-	// memoryState.error содержит ошибки
-}
-```
+	useEffect(() => {
+		loadMemories('replica-uuid');
+	}, []);
 
-### Ручная загрузка
-
-```typescript
-import { useMemory } from '@/components/memory-provider';
-
-function MyComponent() {
-	const { loadMemories, memoryState } = useMemory();
-
-	const handleLoad = async () => {
-		await loadMemories('replica-uuid');
-	};
-}
-```
-
-### Отображение памяти
-
-```typescript
-{
-	memoryState.memories.map((memory) => (
-		<div key={memory.id}>
-			<h3>{memory.role === 'user' ? 'Пользователь' : 'Реплика'}</h3>
-			<p>{memory.content}</p>
-			<small>{new Date(memory.createdAt).toLocaleString()}</small>
+	return (
+		<div>
+			{memories.map((memory) => (
+				<div key={memory.id}>{memory.content}</div>
+			))}
 		</div>
-	));
+	);
 }
 ```
 
-## Интеграция
+## Features
 
-Провайдер интегрирован в `app/layout.tsx`:
+- **Automatic loading**: Memory loads when replica is selected
+- **Global state**: Available throughout the application
+- **Real-time updates**: Memory refreshes automatically
+- **Error handling**: Proper error states and loading indicators
+- **Type safety**: Full TypeScript support
 
-```typescript
-<MemoryProvider>
-	<ChatProvider>{/* остальные компоненты */}</ChatProvider>
-</MemoryProvider>
-```
+## API Integration
 
-## Тестирование
+The system integrates with Sensay API memory endpoints:
 
-1. Перейдите на `/test`
-2. Введите UUID реплики
-3. Нажмите "Загрузить память"
-4. Просмотрите загруженные данные
-5. Используйте поиск для фильтрации
+- Memory retrieval
+- Memory management
+- Source tracking
+- User association
 
-## Особенности
+## Error Handling
 
-- **Автоматическая загрузка**: Память загружается при выборе реплики
-- **Глобальное состояние**: Доступно во всем приложении
-- **RAG источники**: Отображение источников информации
-- **Поиск**: Фильтрация по содержимому
-- **Статистика**: Подсчет сообщений и источников
-- **Обработка ошибок**: Показ ошибок загрузки
+The system includes comprehensive error handling:
 
-## API Endpoints
+- Network errors
+- API errors
+- Loading states
+- Empty states
 
-- `GET /api/sensay/replicas/{id}/memory` - получить память реплики
-- Использует существующие настройки Sensay API
-- Поддерживает все типы источников (web, discord, telegram, etc.)
+## Performance
+
+- Memory is cached in global state
+- Automatic cleanup on replica change
+- Efficient re-renders with React hooks

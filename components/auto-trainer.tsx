@@ -53,7 +53,7 @@ export default function AutoTrainer() {
 		setTrainingResults(null);
 
 		try {
-			// Симулируем прогресс
+			// Simulate progress
 			const progressInterval = setInterval(() => {
 				setTrainingProgress((prev) => Math.min(prev + 10, 90));
 			}, 500);
@@ -163,12 +163,12 @@ export default function AutoTrainer() {
 			<Card className="border border-dark-500 bg-dark-300 text-white">
 				<CardHeader>
 					<CardTitle className="flex items-center gap-2">
-						<Brain className="h-5 w-5 text-mafia-300" />
+						<Brain className="h-5 w-5 text-gray-300" />
 						<span>Auto-Trainer</span>
 					</CardTitle>
 					<CardDescription>
-						Автоматически обучает реплики специализированными знаниями и
-						поведением
+						Automatically trains replicas with specialized knowledge and
+						behavior
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4">
@@ -246,14 +246,14 @@ export default function AutoTrainer() {
 				<Card className="border border-dark-500 bg-dark-300 text-white">
 					<CardHeader>
 						<CardTitle className="flex items-center gap-2">
-							<Target className="h-5 w-5 text-mafia-300" />
+							<Target className="h-5 w-5 text-gray-300" />
 							<span>Training Results</span>
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
 						<div className="grid grid-cols-3 gap-4 mb-4">
 							<div className="text-center">
-								<div className="text-2xl font-bold text-mafia-300">
+								<div className="text-2xl font-bold text-gray-300">
 									{trainingResults.totalReplicas}
 								</div>
 								<div className="text-sm text-gray-400">Total Replicas</div>
@@ -313,11 +313,11 @@ export default function AutoTrainer() {
 			<Card className="border border-dark-500 bg-dark-300 text-white">
 				<CardHeader>
 					<CardTitle className="flex items-center gap-2">
-						<BookOpen className="h-5 w-5 text-mafia-300" />
+						<BookOpen className="h-5 w-5 text-gray-300" />
 						<span>Available Training Templates</span>
 					</CardTitle>
 					<CardDescription>
-						Специализированные шаблоны обучения для разных типов реплик
+						Specialized training templates for different types of replicas
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
@@ -328,7 +328,7 @@ export default function AutoTrainer() {
 								className="p-4 border border-dark-500 bg-dark-400 rounded-lg"
 							>
 								<div className="flex items-center gap-2 mb-2">
-									<Bot className="h-4 w-4 text-mafia-300" />
+									<Bot className="h-4 w-4 text-gray-300" />
 									<h3 className="font-medium">{template.name}</h3>
 								</div>
 								<p className="text-sm text-gray-400 mb-3">{template.purpose}</p>

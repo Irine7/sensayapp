@@ -133,11 +133,10 @@ export default function ChatInterface() {
 				selectedReplicaUuid
 			);
 		} else {
-			// If no replica is selected, use standard Mafia Coach greeting
+			// If no replica is selected, use standard greeting
 			addMessage({
 				role: 'assistant',
-				content:
-					"Hello! I'm Mafia Coach. How can I help you in the Mafia game?",
+				content: "Hello! I'm your AI assistant. How can I help you today?",
 			});
 		}
 	};
@@ -170,7 +169,7 @@ export default function ChatInterface() {
 								<div className="relative h-8 w-8 rounded-full overflow-hidden border-2 border-white">
 									<Image
 										src="/coach.png"
-										alt="Mafia Coach"
+										alt="AI Assistant"
 										fill
 										className="object-cover"
 										sizes="32px"
@@ -180,7 +179,7 @@ export default function ChatInterface() {
 							)}
 							<div className="flex flex-col">
 								<span className="truncate text-sm font-semibold">
-									{selectedReplica ? selectedReplica.name : 'Mafia Coach'}
+									{selectedReplica ? selectedReplica.name : 'AI Assistant'}
 								</span>
 								{selectedReplica && (
 									<span className="text-xs text-gray-400">
@@ -195,7 +194,7 @@ export default function ChatInterface() {
 					variant="ghost"
 					size="icon"
 					onClick={handleClearChat}
-					className="text-white hover:bg-mafia-800 hover:text-white"
+					className="text-white hover:bg-gray-800 hover:text-white"
 					title="Clear chat history"
 				>
 					<Trash2 className="h-4 w-4" />
@@ -218,8 +217,8 @@ export default function ChatInterface() {
 							<div
 								className={`max-w-[80%] rounded-lg p-3 ${
 									message.role === 'user'
-										? 'bg-mafia-600 text-white'
-										: 'bg-muted dark:bg-mafia-800/50'
+										? 'bg-primary text-white'
+										: 'bg-muted dark:bg-gray-800/50'
 								}`}
 							>
 								{message.role === 'assistant' ? (
@@ -264,25 +263,25 @@ export default function ChatInterface() {
 														!match && !props.children?.includes('\n');
 													return isInline ? (
 														<code
-															className="bg-mafia-100 dark:bg-mafia-700 px-1 py-0.5 rounded text-xs"
+															className="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-xs"
 															{...props}
 														/>
 													) : (
 														<code
-															className="block bg-mafia-100 dark:bg-mafia-700 p-2 rounded text-xs my-2 overflow-x-auto"
+															className="block bg-gray-100 dark:bg-gray-700 p-2 rounded text-xs my-2 overflow-x-auto"
 															{...props}
 														/>
 													);
 												},
 												pre: ({ node, ...props }) => (
 													<pre
-														className="bg-mafia-100 dark:bg-mafia-700 p-2 rounded my-2 overflow-x-auto"
+														className="bg-gray-100 dark:bg-gray-700 p-2 rounded my-2 overflow-x-auto"
 														{...props}
 													/>
 												),
 												blockquote: ({ node, ...props }) => (
 													<blockquote
-														className="border-l-4 border-mafia-300 dark:border-mafia-600 pl-2 italic my-2"
+														className="border-l-4 border-gray-300 dark:border-gray-600 pl-2 italic my-2"
 														{...props}
 													/>
 												),
@@ -327,7 +326,7 @@ export default function ChatInterface() {
 						onChange={(e) => setInput(e.target.value)}
 						placeholder="Enter your message"
 						disabled={isLoading}
-						className="focus-visible:ring-mafia-500"
+						className="focus-visible:ring-blue-500"
 					/>
 					<Button
 						type="submit"

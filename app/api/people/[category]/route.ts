@@ -24,8 +24,8 @@ interface PeopleListResponse {
 	totalCount: number;
 }
 
-// Данные людей получаются только от ИИ-агента через чат
-// Никаких хардкодных моков!
+// People data is obtained only from AI agent through chat
+// No hardcoded mocks!
 
 export async function GET(
 	request: NextRequest,
@@ -36,7 +36,7 @@ export async function GET(
 		const query = searchParams.get('q') || '';
 		const category = params.category;
 
-		// Возвращаем пустой список - данные получаются только от ИИ-агента
+		// Return empty list - data is obtained only from AI agent
 		const people: Person[] = [];
 
 		const response: PeopleListResponse = {

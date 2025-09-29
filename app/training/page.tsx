@@ -41,7 +41,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useReplica } from '@/components/replica-provider';
 import AutoTrainer from '@/components/auto-trainer';
-// Импорт функции статистики удален, так как API не поддерживает этот эндпоинт
+// Statistics function import removed as API doesn't support this endpoint
 
 // Using the actual Sensay API types
 type KnowledgeEntry = {
@@ -74,7 +74,7 @@ export default function TrainingPage() {
 
 	// Use global replica context instead of local state
 	const { selectedReplicaUuid: replicaUUID, selectedReplica } = useReplica();
-	// Состояния для статистики удалены, так как API не поддерживает этот эндпоинт
+	// Statistics states removed as API doesn't support this endpoint
 
 	const { toast } = useToast();
 
@@ -90,7 +90,7 @@ export default function TrainingPage() {
 
 				// Fetch entries from the API via API routes
 				try {
-					// Используем replicaUUID для фильтрации данных, если он задан
+					// Use replicaUUID to filter data if it's set
 					const url = replicaUUID
 						? `/api/sensay/training?replica_uuid=${replicaUUID}`
 						: '/api/sensay/training';
@@ -533,7 +533,7 @@ export default function TrainingPage() {
 		>
 			<div className="space-y-6">
 				<div className="flex items-center justify-between">
-					<h1 className="text-3xl font-bold text-mafia-900 dark:text-mafia-100">
+					<h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
 						AI Training
 					</h1>
 					<Button
@@ -562,9 +562,9 @@ export default function TrainingPage() {
 					</TabsContent>
 
 					<TabsContent value="text">
-						<Card className="border-mafia-200 dark:border-mafia-800">
-							<CardHeader className="bg-mafia-50 dark:bg-mafia-900/20 rounded-t-lg">
-								<CardTitle className="text-mafia-900 dark:text-mafia-300">
+						<Card className="border-gray-200 dark:border-gray-800">
+							<CardHeader className="bg-mafia-50 dark:bg-gray-900/20 rounded-t-lg">
+								<CardTitle className="text-gray-900 dark:text-gray-300">
 									Create Training Entry
 								</CardTitle>
 								<CardDescription>
@@ -579,8 +579,8 @@ export default function TrainingPage() {
 									>
 										Active Replica
 									</label>
-									<div className="flex items-center gap-2 p-2 border rounded-md border-mafia-300 bg-mafia-50 dark:bg-mafia-900/20 dark:border-mafia-700">
-										<Bot className="h-5 w-5 text-mafia-500" />
+									<div className="flex items-center gap-2 p-2 border rounded-md border-gray-300 bg-mafia-50 dark:bg-gray-900/20 dark:border-blue-700">
+										<Bot className="h-5 w-5 text-gray-500" />
 										{selectedReplica ? (
 											<div>
 												<span className="font-medium">
@@ -591,7 +591,7 @@ export default function TrainingPage() {
 												</span>
 											</div>
 										) : (
-											<div className="text-mafia-500 italic">
+											<div className="text-gray-500 italic">
 												No replica selected. Please select a replica from the
 												header dropdown.
 											</div>
@@ -610,7 +610,7 @@ export default function TrainingPage() {
 										value={title}
 										onChange={(e) => setTitle(e.target.value)}
 										placeholder="Enter a title for this training entry"
-										className="border-mafia-300 focus-visible:ring-mafia-500"
+										className="border-gray-300 focus-visible:ring-gray-500"
 									/>
 								</div>
 								<div>
@@ -625,7 +625,7 @@ export default function TrainingPage() {
 										value={content}
 										onChange={(e) => setContent(e.target.value)}
 										placeholder="Enter the training content"
-										className="min-h-[150px] border-mafia-300 focus-visible:ring-mafia-500"
+										className="min-h-[150px] border-gray-300 focus-visible:ring-gray-500"
 									/>
 								</div>
 								<div>
@@ -640,14 +640,14 @@ export default function TrainingPage() {
 										value={description}
 										onChange={(e) => setDescription(e.target.value)}
 										placeholder="Enter a description for this training entry"
-										className="min-h-[80px] border-mafia-300 focus-visible:ring-mafia-500"
+										className="min-h-[80px] border-gray-300 focus-visible:ring-gray-500"
 									/>
 								</div>
 							</CardContent>
 							<CardFooter>
 								<Button
 									onClick={handleCreateEntry}
-									className="bg-mafia-600 hover:bg-mafia-700"
+									variant="secondary"
 									disabled={loading}
 								>
 									<Plus className="mr-2 h-4 w-4" />
@@ -658,9 +658,9 @@ export default function TrainingPage() {
 					</TabsContent>
 
 					<TabsContent value="upload">
-						<Card className="border-mafia-200 dark:border-mafia-800">
-							<CardHeader className="bg-mafia-50 dark:bg-mafia-900/20 rounded-t-lg">
-								<CardTitle className="text-mafia-900 dark:text-mafia-300">
+						<Card className="border-gray-200 dark:border-gray-800">
+							<CardHeader className="bg-mafia-50 dark:bg-gray-900/20 rounded-t-lg">
+								<CardTitle className="text-gray-900 dark:text-gray-300">
 									Upload Training Files
 								</CardTitle>
 								<CardDescription>
@@ -675,8 +675,8 @@ export default function TrainingPage() {
 									>
 										Active Replica
 									</label>
-									<div className="flex items-center gap-2 p-2 border rounded-md border-mafia-300 bg-mafia-50 dark:bg-mafia-900/20 dark:border-mafia-700">
-										<Bot className="h-5 w-5 text-mafia-500" />
+									<div className="flex items-center gap-2 p-2 border rounded-md border-gray-300 bg-mafia-50 dark:bg-gray-900/20 dark:border-blue-700">
+										<Bot className="h-5 w-5 text-gray-500" />
 										{selectedReplica ? (
 											<div>
 												<span className="font-medium">
@@ -687,7 +687,7 @@ export default function TrainingPage() {
 												</span>
 											</div>
 										) : (
-											<div className="text-mafia-500 italic">
+											<div className="text-gray-500 italic">
 												No replica selected. Please select a replica from the
 												header dropdown.
 											</div>
@@ -706,7 +706,7 @@ export default function TrainingPage() {
 											id="file"
 											type="file"
 											onChange={handleFileChange}
-											className="border-mafia-300 focus-visible:ring-mafia-500"
+											className="border-gray-300 focus-visible:ring-gray-500"
 										/>
 										{file && (
 											<div className="flex items-center gap-2 text-sm">
@@ -721,7 +721,7 @@ export default function TrainingPage() {
 								{uploadProgress > 0 && (
 									<div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
 										<div
-											className="bg-mafia-600 h-2.5 rounded-full"
+											className="bg-blue-600 h-2.5 rounded-full"
 											style={{ width: `${uploadProgress}%` }}
 										/>
 									</div>
@@ -730,7 +730,7 @@ export default function TrainingPage() {
 							<CardFooter>
 								<Button
 									onClick={handleFileUpload}
-									className="bg-mafia-600 hover:bg-mafia-700"
+									className="bg-blue-600 hover:bg-blue-700"
 									disabled={!file || uploadProgress > 0 || loading}
 								>
 									<Upload className="mr-2 h-4 w-4" />
@@ -742,7 +742,7 @@ export default function TrainingPage() {
 				</Tabs>
 
 				<div>
-					<h2 className="text-xl font-bold mb-4 text-mafia-900 dark:text-mafia-100">
+					<h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">
 						Training Entries
 					</h2>
 					{loading && !refreshing ? (
@@ -753,11 +753,11 @@ export default function TrainingPage() {
 						</div>
 					) : entries.length === 0 ? (
 						<div className="text-center py-8 border border-dashed rounded-lg">
-							<AlertCircle className="mx-auto h-10 w-10 text-mafia-400 mb-2" />
-							<p className="text-mafia-600 dark:text-mafia-400">
+							<AlertCircle className="mx-auto h-10 w-10 text-gray-400 mb-2" />
+							<p className="text-blue-600 dark:text-gray-400">
 								No training entries found
 							</p>
-							<p className="text-sm text-mafia-500 dark:text-mafia-500">
+							<p className="text-sm text-gray-500 dark:text-gray-500">
 								Create a new entry above to get started with training your AI
 							</p>
 						</div>
@@ -781,7 +781,7 @@ export default function TrainingPage() {
 											key={entry.id}
 											className={
 												editingId === entry.id
-													? 'bg-mafia-50 dark:bg-mafia-800/30'
+													? 'bg-mafia-50 dark:bg-gray-800/30'
 													: ''
 											}
 										>
@@ -792,7 +792,7 @@ export default function TrainingPage() {
 														value={editTitle}
 														onChange={(e) => setEditTitle(e.target.value)}
 														placeholder="Title"
-														className="border-mafia-300 focus-visible:ring-mafia-500"
+														className="border-gray-300 focus-visible:ring-gray-500"
 													/>
 												) : (
 													<div className="max-w-[200px] truncate">
@@ -806,7 +806,7 @@ export default function TrainingPage() {
 														value={editContent}
 														onChange={(e) => setEditContent(e.target.value)}
 														placeholder="Content"
-														className="min-h-[100px] border-mafia-300 focus-visible:ring-mafia-500"
+														className="min-h-[100px] border-gray-300 focus-visible:ring-gray-500"
 													/>
 												) : (
 													<div className="max-w-[200px] truncate">

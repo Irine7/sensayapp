@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Получить конкретную реплику по ID
+// Get specific replica by ID
 export async function GET(
 	request: NextRequest,
 	{ params }: { params: Promise<{ id: string }> }

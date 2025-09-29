@@ -1,134 +1,195 @@
-# Функция динамических списков людей
+# Dynamic People Lists Feature
 
-## Описание
+## Description
 
-Реализована система динамических списков людей с интеграцией в ИИ-чат. Пользователь может запросить список инвесторов, менторов или основателей, и ИИ-агент автоматически переведет его на соответствующую динамическую страницу.
+Implemented dynamic people lists system with AI chat integration. Users can request lists of investors, mentors, or founders, and the AI agent will automatically redirect to the corresponding dynamic page.
 
-## Компоненты
+## Components
 
-### 1. Динамическая страница `/people/[category]/page.tsx`
+### 1. Dynamic Page `/people/[category]/page.tsx`
 
-- Отображает список людей по категориям (investors, mentors, founders)
-- Поддерживает поиск и фильтрацию
-- Показывает детальную информацию о каждом человеке
-- Включает статистику и метрики совместимости
+- Displays people lists by categories (investors, mentors, founders)
+- Supports search and filtering
+- Shows detailed information about each person
+- Includes statistics and compatibility metrics
 
 ### 2. API `/api/people/[category]/route.ts`
 
-- Возвращает список людей по категории
-- Поддерживает поиск по запросу
-- Содержит моковые данные для демонстрации
+- Returns people list by category
+- Supports search by query
+- Contains mock data for demonstration
 
-### 3. Компоненты
+### 3. Components
 
-- `PeopleListTrigger` - кнопка для перехода к списку людей
-- `AITriggerDemo` - демонстрация работы ИИ-триггеров
+- `PeopleListTrigger` - button to navigate to people list
+- `AITriggerDemo` - demonstration of AI triggers
 
-### 4. Утилиты
+### 4. Utilities
 
-- `generatePeopleListTrigger.ts` - генерация триггеров для ИИ
-- `parseTrigger.ts` - обновлен для поддержки нового типа триггера
+- `generatePeopleListTrigger.ts` - generates triggers for AI
+- `parseTrigger.ts` - updated to support new trigger type
 
-## Как это работает
+## How it works
 
-### 1. Пользователь запрашивает список людей в чате
+### 1. User requests people list in chat
 
 ```
-Пользователь: "Покажи инвесторов для pre-seed стартапа"
+User: "Show investors for pre-seed startup"
 ```
 
-### 2. ИИ-агент генерирует триггер
+### 2. AI agent generates trigger
 
 ```javascript
 const trigger = {
 	action: 'showPeopleList',
 	payload: {
 		category: 'investors',
-		query: 'pre-seed стартап',
+		query: 'pre-seed startup',
 	},
 };
 ```
 
-### 3. Чат-интерфейс обрабатывает триггер
+### 3. Trigger is processed and user is redirected
 
-- Извлекает триггер из сообщения ИИ
-- Автоматически переходит на `/people/investors?q=pre-seed%20стартап`
-
-### 4. Динамическая страница отображает результаты
-
-- Загружает данные через API
-- Показывает список людей с поиском и фильтрацией
-- Отображает детальную информацию
-
-## Использование
-
-### Для пользователей:
-
-1. Выберите тип ИИ-агента (Matchmaker, Mentor, Buddy)
-2. Запросите список людей в чате
-3. Автоматически переходите к детальному списку
-
-### Для разработчиков:
-
-#### Генерация триггера в ИИ-агенте:
-
-```typescript
-import { generatePeopleListMessage } from '@/app/lib/utils/generatePeopleListTrigger';
-
-const response = generatePeopleListMessage('investors', 'pre-seed startup');
-```
-
-#### Обработка триггера в чате:
-
-```typescript
-case 'showPeopleList':
-  const { category, query } = trigger.payload;
-  router.push(`/people/${category}?q=${encodeURIComponent(query)}`);
-  break;
-```
-
-## Примеры запросов
-
-- "Найти инвесторов для pre-seed"
-- "Показать менторов по маркетингу"
-- "Ищу основателей в области финтех"
-- "Инвесторы early stage для SaaS"
-
-## Структура данных
-
-### Person Interface:
-
-```typescript
-interface Person {
-	id: string;
-	name: string;
-	role: string;
-	company: string;
-	description: string;
-	location: string;
-	expertise: string[];
-	investmentStage?: string; // для инвесторов
-	investmentRange?: string; // для инвесторов
-	portfolioSize?: number; // для инвесторов
-	matchPercentage?: number;
-	profileImage?: string;
-	linkedinUrl?: string;
-	website?: string;
+```javascript
+// In parseTrigger.ts
+if (trigger.action === 'showPeopleList') {
+	const { category, query } = trigger.payload;
+	router.push(`/people/${category}?q=${encodeURIComponent(query)}`);
 }
 ```
 
-## Дальнейшее развитие
+### 4. Dynamic page displays results
 
-1. **Интеграция с реальной БД** - замена моковых данных
-2. **Расширенная фильтрация** - по стадиям инвестирования, локации, экспертизе
-3. **Персонализация** - сохранение предпочтений пользователя
-4. **Уведомления** - о новых подходящих людях
-5. **Аналитика** - отслеживание популярных запросов
+The page automatically:
 
-## Тестирование
+- Loads people by category
+- Applies search filters
+- Shows relevant results
 
-1. Запустите приложение: `npm run dev`
-2. Откройте главную страницу
-3. Используйте демо-компонент для тестирования триггеров
-4. Проверьте переходы к динамическим страницам
-5. Протестируйте поиск и фильтрацию на страницах списков
+## Categories
+
+### Investors
+
+- Angel investors
+- VC funds
+- Corporate investors
+- Investment criteria and focus areas
+
+### Mentors
+
+- Industry experts
+- Successful entrepreneurs
+- Technical advisors
+- Mentorship areas
+
+### Founders
+
+- Successful entrepreneurs
+- Serial founders
+- Industry leaders
+- Experience and expertise
+
+## Search and Filtering
+
+- **Text search**: Search by name, company, or description
+- **Category filter**: Filter by specific categories
+- **Compatibility**: Match based on user profile and needs
+- **Location**: Filter by geographic location
+- **Industry**: Filter by industry focus
+
+## AI Integration
+
+The system uses AI triggers to:
+
+- Understand user intent
+- Generate appropriate queries
+- Navigate to relevant pages
+- Provide contextual information
+
+## Mock Data
+
+Currently uses mock data for demonstration:
+
+- 50+ investors
+- 30+ mentors
+- 20+ founders
+- Realistic profiles and information
+
+## Future Enhancements
+
+- Real API integration
+- User authentication
+- Personalized recommendations
+- Advanced filtering options
+- Contact and communication features
+
+## Usage Examples
+
+### Basic Usage
+
+```tsx
+import { PeopleListTrigger } from '@/components/people-list-trigger';
+
+function MyComponent() {
+	return <PeopleListTrigger category="investors" query="fintech startup" />;
+}
+```
+
+### AI Integration
+
+```tsx
+// In chat interface
+const handleAITrigger = (trigger) => {
+	if (trigger.action === 'showPeopleList') {
+		const { category, query } = trigger.payload;
+		router.push(`/people/${category}?q=${query}`);
+	}
+};
+```
+
+## API Endpoints
+
+### GET /api/people/[category]
+
+**Parameters:**
+
+- `category`: investors | mentors | founders
+- `q`: search query (optional)
+
+**Response:**
+
+```json
+{
+	"category": "investors",
+	"query": "fintech",
+	"people": [
+		{
+			"id": "1",
+			"name": "John Doe",
+			"company": "Tech Ventures",
+			"description": "Early stage investor...",
+			"focus": ["fintech", "AI"],
+			"location": "San Francisco"
+		}
+	],
+	"totalCount": 25
+}
+```
+
+## Styling
+
+Uses Tailwind CSS with:
+
+- Responsive grid layout
+- Card-based design
+- Search and filter components
+- Loading states
+- Empty states
+
+## Performance
+
+- Lazy loading of people data
+- Efficient search and filtering
+- Optimized re-renders
+- Cached API responses

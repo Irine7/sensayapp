@@ -15,10 +15,16 @@ import ResizablePanel from '@/components/resizable-panel';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-	title: 'Evoo',
+	title: 'AI Assistant Platform',
 	description: 'AI-powered application with Sensay API',
 	icons: {
-		icon: '/favicon.ico',
+		icon: [
+			{ url: '/favicon.ico', sizes: 'any' },
+			{ url: '/favicon.svg', type: 'image/svg+xml' },
+			{ url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+		],
+		shortcut: '/favicon.ico',
+		apple: '/favicon-96x96.png',
 	},
 };
 

@@ -87,12 +87,12 @@ export default function ApiKeysPage() {
 
   return (
     <div className="container mx-auto py-6">
-      <h1 className="text-3xl font-bold mb-6 text-mafia-900 dark:text-mafia-300">API Keys</h1>
+      <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-300">API Keys</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="border-mafia-200 dark:border-mafia-800">
-          <CardHeader className="bg-mafia-50 dark:bg-mafia-900/20 rounded-t-lg">
-            <CardTitle className="text-mafia-900 dark:text-mafia-300">Redeem Invitation</CardTitle>
+        <Card className="border-gray-200 dark:border-gray-800">
+          <CardHeader className="bg-gray-50 dark:bg-gray-900/20 rounded-t-lg">
+            <CardTitle className="text-gray-900 dark:text-gray-300">Redeem Invitation</CardTitle>
             <CardDescription>Redeem an API key invitation code</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 pt-4">
@@ -105,12 +105,12 @@ export default function ApiKeysPage() {
                 value={inviteCode}
                 onChange={(e) => setInviteCode(e.target.value)}
                 placeholder="Enter your invitation code"
-                className="border-mafia-300 focus-visible:ring-mafia-500"
+                className="border-gray-300 focus-visible:ring-gray-500"
               />
             </div>
           </CardContent>
           <CardFooter>
-            <Button onClick={handleRedeemInvite} className="bg-mafia-600 hover:bg-mafia-700" disabled={loading}>
+            <Button onClick={handleRedeemInvite} variant="secondary"  disabled={loading}>
               <Key className="mr-2 h-4 w-4" />
               {loading ? "Redeeming..." : "Redeem Code"}
             </Button>
@@ -118,9 +118,9 @@ export default function ApiKeysPage() {
         </Card>
 
         {apiKey && (
-          <Card className="border-mafia-200 dark:border-mafia-800">
-            <CardHeader className="bg-mafia-50 dark:bg-mafia-900/20 rounded-t-lg">
-              <CardTitle className="text-mafia-900 dark:text-mafia-300">Your API Key</CardTitle>
+          <Card className="border-gray-200 dark:border-gray-800">
+            <CardHeader className="bg-gray-50 dark:bg-gray-900/20 rounded-t-lg">
+              <CardTitle className="text-gray-900 dark:text-gray-300">Your API Key</CardTitle>
               <CardDescription>Store this key securely</CardDescription>
             </CardHeader>
             <CardContent className="pt-4">
@@ -130,7 +130,7 @@ export default function ApiKeysPage() {
               </p>
             </CardContent>
             <CardFooter>
-              <Button onClick={copyApiKey} className="bg-mafia-600 hover:bg-mafia-700">
+              <Button onClick={copyApiKey} className="bg-blue-600 hover:bg-blue-700">
                 Copy to Clipboard
               </Button>
             </CardFooter>

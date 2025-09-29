@@ -57,8 +57,8 @@ export default function ReplicaForm({
 		tools: ['getTokenInfo'] as string[],
 	};
 
-	// Получаем ID пользователя из переменных окружения на стороне клиента
-	// Обратите внимание, что это доступно только потому, что мы экспортируем NEXT_PUBLIC_SENSAY_USER_ID
+	// Get user ID from environment variables on client side
+	// Note: this is only available because we export NEXT_PUBLIC_SENSAY_USER_ID
 	const userId =
 		process.env.NEXT_PUBLIC_SENSAY_USER_ID ||
 		'f676f323-fc10-44a3-8f8d-508b1f9c942f';
@@ -75,7 +75,7 @@ export default function ReplicaForm({
 		whitelistEmails: initialData?.whitelistEmails || [],
 		slug: initialData?.slug || '',
 		tags: initialData?.tags || [],
-		// Используем надежный URL-изображения по умолчанию, гарантированно доступный через HTTP
+		// Use reliable default image URL, guaranteed to be accessible via HTTP
 		profileImage:
 			initialData?.profileImage ||
 			initialData?.profile_image ||
@@ -349,16 +349,16 @@ export default function ReplicaForm({
 
 				return {
 					...prev,
-					// Основные поля
+					// Main fields
 					name: data.name || prev.name,
 					purpose: data.purpose || prev.purpose,
 					shortDescription: data.shortDescription || prev.shortDescription,
 					greeting: data.greeting || prev.greeting,
-					// Дополнительные поля
+					// Additional fields
 					type: data.type || prev.type,
-					slug: slugToUse, // Используем сгенерированный slug
+					slug: slugToUse, // Use generated slug
 					llm: updatedLlm,
-					// Заполняем массивы
+					// Fill arrays
 					tags:
 						prev.tags && prev.tags.length > 0
 							? prev.tags
@@ -367,18 +367,18 @@ export default function ReplicaForm({
 						prev.suggestedQuestions && prev.suggestedQuestions.length > 0
 							? prev.suggestedQuestions
 							: data.suggestedQuestions || [
-									'Чем ты можешь помочь?',
-									'Расскажи о себе',
-									'Какие у тебя возможности?',
+									'How can you help me?',
+									'Tell me about yourself',
+									'What are your capabilities?',
 							  ],
-					// Изображение профиля
+					// Profile image
 					profileImage: isDefaultProfileImage
 						? prev.profileImage
 						: prev.profileImage,
 				};
 			});
 
-			// Показываем рекомендацию для изображения профиля
+			// Show recommendation for profile image
 			if (data.profileImageDescription) {
 				toast({
 					title: 'Image Recommendation',
@@ -706,7 +706,7 @@ export default function ReplicaForm({
 									<Button
 										type="button"
 										onClick={handleAddTag}
-										className="bg-mafia-600 hover:bg-mafia-700"
+										className="bg-blue-600 hover:bg-blue-700"
 									>
 										<Plus className="h-4 w-4" />
 									</Button>
@@ -752,7 +752,7 @@ export default function ReplicaForm({
 									<Button
 										type="button"
 										onClick={handleAddEmail}
-										className="bg-mafia-600 hover:bg-mafia-700"
+										className="bg-blue-600 hover:bg-blue-700"
 									>
 										<Plus className="h-4 w-4" />
 									</Button>
@@ -787,7 +787,7 @@ export default function ReplicaForm({
 									<Input
 										value={newQuestion}
 										onChange={(e) => setNewQuestion(e.target.value)}
-										placeholder="What is Mafia Coach?"
+										placeholder="What is this AI assistant?"
 										className="border-dark-500 bg-dark-400 text-white"
 										onKeyDown={(e) =>
 											e.key === 'Enter' &&
@@ -797,7 +797,7 @@ export default function ReplicaForm({
 									<Button
 										type="button"
 										onClick={handleAddQuestion}
-										className="bg-mafia-600 hover:bg-mafia-700"
+										className="bg-blue-600 hover:bg-blue-700"
 									>
 										<Plus className="h-4 w-4" />
 									</Button>
@@ -841,7 +841,7 @@ export default function ReplicaForm({
 									<Button
 										type="button"
 										onClick={handleAddTool}
-										className="bg-mafia-600 hover:bg-mafia-700"
+										className="bg-blue-600 hover:bg-blue-700"
 									>
 										<Plus className="h-4 w-4" />
 									</Button>
@@ -883,7 +883,7 @@ export default function ReplicaForm({
 				</Button>
 				<Button
 					type="submit"
-					className="bg-mafia-600 hover:bg-mafia-700"
+					className="bg-blue-600 hover:bg-blue-700"
 					disabled={isLoading}
 				>
 					{isLoading ? (

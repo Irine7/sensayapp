@@ -1,4 +1,4 @@
--- Создание таблицы для хранения настроек API
+-- Creating table for storing API settings
 CREATE TABLE IF NOT EXISTS api_settings (
   id TEXT PRIMARY KEY,
   name TEXT UNIQUE NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS api_settings (
   updatedAt TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
--- Создание таблицы для хранения сессий чата
+-- Creating table for storing chat sessions
 CREATE TABLE IF NOT EXISTS chat_sessions (
   id TEXT PRIMARY KEY,
   apiSettingsId TEXT NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS chat_sessions (
   FOREIGN KEY (apiSettingsId) REFERENCES api_settings(id)
 );
 
--- Создание таблицы для хранения сообщений чата
+-- Creating table for storing chat messages
 CREATE TABLE IF NOT EXISTS chat_messages (
   id TEXT PRIMARY KEY,
   sessionId TEXT NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS chat_messages (
   FOREIGN KEY (sessionId) REFERENCES chat_sessions(id) ON DELETE CASCADE
 );
 
--- Добавление текущих настроек API из .env
+-- Adding current API settings from .env
 INSERT INTO api_settings (
   id, 
   name, 
